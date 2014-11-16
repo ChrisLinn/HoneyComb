@@ -135,6 +135,38 @@
         <tIfile></tIfile>
         <pMon></pMon>
       </DebugOpt>
+      <Breakpoint>
+        <Bp>
+          <Number>0</Number>
+          <Type>0</Type>
+          <LineNumber>288</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>0</Address>
+          <ByteObject>0</ByteObject>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>0</BreakIfRCount>
+          <Filename>Queen.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression></Expression>
+        </Bp>
+        <Bp>
+          <Number>1</Number>
+          <Type>0</Type>
+          <LineNumber>295</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>0</Address>
+          <ByteObject>0</ByteObject>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>0</BreakIfRCount>
+          <Filename>Queen.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression></Expression>
+        </Bp>
+      </Breakpoint>
       <DebugFlag>
         <trace>0</trace>
         <periodic>1</periodic>
@@ -176,33 +208,14 @@
       <FileNumber>1</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>1</Focus>
-      <ColumnNumber>3</ColumnNumber>
+      <Focus>0</Focus>
+      <ColumnNumber>13</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1</TopLine>
-      <CurrentLine>1</CurrentLine>
+      <TopLine>205</TopLine>
+      <CurrentLine>205</CurrentLine>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\Test.c</PathWithFileName>
-      <FilenameWithoutPath>Test.c</FilenameWithoutPath>
-      <WindowPosition>
-        <length>44</length>
-        <flags>2</flags>
-        <showCmd>3</showCmd>
-        <MinPosition>
-          <xPos>-1</xPos>
-          <yPos>-1</yPos>
-        </MinPosition>
-        <MaxPosition>
-          <xPos>-4</xPos>
-          <yPos>-30</yPos>
-        </MaxPosition>
-        <NormalPosition>
-          <Top>29</Top>
-          <Left>22</Left>
-          <Right>745</Right>
-          <Bottom>346</Bottom>
-        </NormalPosition>
-      </WindowPosition>
+      <PathWithFileName>.\Queen.c</PathWithFileName>
+      <FilenameWithoutPath>Queen.c</FilenameWithoutPath>
     </File>
   </Group>
 
@@ -1275,10 +1288,10 @@
       <ActiveTab>0</ActiveTab>
       <Documents>
         <Doc>
-          <Name>.\Test.c</Name>
-          <ColumnNumber>3</ColumnNumber>
-          <TopLine>1</TopLine>
-          <CurrentLine>1</CurrentLine>
+          <Name>.\Queen.c</Name>
+          <ColumnNumber>13</ColumnNumber>
+          <TopLine>205</TopLine>
+          <CurrentLine>205</CurrentLine>
         </Doc>
       </Documents>
     </MDIGroup>

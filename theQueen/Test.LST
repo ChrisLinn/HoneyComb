@@ -1,4 +1,4 @@
-C51 COMPILER V9.00   TEST                                                                  11/04/2014 20:20:22 PAGE 1   
+C51 COMPILER V9.00   TEST                                                                  11/15/2014 15:52:00 PAGE 1   
 
 
 C51 COMPILER V9.00, COMPILATION OF MODULE TEST
@@ -15,10 +15,10 @@ line level    source
    6          //****************************************NRF24L01端口定义***************************************
    7          sbit    MISO    =P1^3;
    8          sbit    MOSI    =P1^4;
-   9          sbit    SCK         =P1^2;
-  10          sbit    CE          =P1^1;
-  11          sbit    CSN             =P3^2;
-  12          sbit    IRQ             =P3^3;
+   9          sbit    SCK     =P1^2;
+  10          sbit    CE      =P1^1;
+  11          sbit    CSN     =P3^2;
+  12          sbit    IRQ     =P3^3;
   13          //************************************按键***************************************************
   14          sbit    KEY1=P3^6;
   15          sbit    KEY2=P3^7;
@@ -62,7 +62,7 @@ line level    source
   51          #define CD              0x09  // 地址检测           
   52          #define RX_ADDR_P0      0x0A  // 频道0接收数据地址
   53          #define RX_ADDR_P1      0x0B  // 频道1接收数据地址
-C51 COMPILER V9.00   TEST                                                                  11/04/2014 20:20:22 PAGE 2   
+C51 COMPILER V9.00   TEST                                                                  11/15/2014 15:52:00 PAGE 2   
 
   54          #define RX_ADDR_P2      0x0C  // 频道2接收数据地址
   55          #define RX_ADDR_P3      0x0D  // 频道3接收数据地址
@@ -126,7 +126,7 @@ line level    source
  113   1              SPI_RW_Reg(WRITE_REG + RF_SETUP, 0x07);                 //设置发射速率为1MHZ，发射功率为最大值0dB
  114   1      }
  115          /****************************************************************************************************
-C51 COMPILER V9.00   TEST                                                                  11/04/2014 20:20:22 PAGE 3   
+C51 COMPILER V9.00   TEST                                                                  11/15/2014 15:52:00 PAGE 3   
 
  116          /*函数：uint SPI_RW(uint uchar)
  117          /*功能：NRF24L01的SPI写时序
@@ -190,7 +190,7 @@ line level    source
  175   1              CSN = 1;                           
  176   1              
  177   1              return(status);                    // return nRF24L01 status uchar
-C51 COMPILER V9.00   TEST                                                                  11/04/2014 20:20:22 PAGE 4   
+C51 COMPILER V9.00   TEST                                                                  11/15/2014 15:52:00 PAGE 4   
 
  178   1      }
  179          /*********************************************************************************************************
@@ -254,7 +254,7 @@ line level    source
  234   1      }
  235          //************************************主函数************************************************************
  236          void main(void)
-C51 COMPILER V9.00   TEST                                                                  11/04/2014 20:20:22 PAGE 5   
+C51 COMPILER V9.00   TEST                                                                  11/15/2014 15:52:00 PAGE 5   
 
  237          {
  238   1              unsigned char tf =0;
@@ -270,56 +270,61 @@ line level    source
  248   1              P0=0xBF;
  249   1              while(1)
  250   1              {
- 251   2              if(KEY1 ==0 ) 
- 252   2                      {
- 253   3                              P0=seg[1];
- 254   3                          TxBuf[1] = 1 ;
- 255   3                          tf = 1 ; 
- 256   3                  }
- 257   2                 if(KEY2 ==0 )
- 258   2                 {
- 259   3                              P0=seg[2];
- 260   3                              TxBuf[2] =1 ;
- 261   3                              tf = 1 ; 
- 262   3                 }
- 263   2                 if (tf==1)
- 264   2             {        
- 265   3                              nRF24L01_TxPacket(TxBuf);       // Transmit Tx buffer data
- 266   3                              TxBuf[1] = 0x00;
- 267   3                              TxBuf[2] = 0x00;
- 268   3                              tf=0;
- 269   3                              Delay(1000);
- 270   3                 }
- 271   2                      SetRX_Mode();
- 272   2                      nRF24L01_RxPacket(RxBuf);
- 273   2      //***********************************************************************************************
- 274   2                      if(RxBuf[1]|RxBuf[2])
- 275   2                      {                                       
- 276   3                              if(     RxBuf[1]==1)
- 277   3                              {               
- 278   4                                      P0=seg[3];
- 279   4                              }
- 280   3                              if(     RxBuf[2]==1)
- 281   3                              {
- 282   4                                      P0=seg[4];
- 283   4                              }
- 284   3                              Delay(1000);
- 285   3                      }
- 286   2              
- 287   2                      RxBuf[1] = 0x00;
- 288   2                      RxBuf[2] = 0x00;
- 289   2      
- 290   2              }
- 291   1              
- 292   1      }
+ 251   2                      if(CheckAsk())
+*** WARNING C206 IN LINE 251 OF TEST.C: 'CheckAsk': missing function-prototype
+ 252   2                      {                 
+ 253   3                              AskRec();
+*** WARNING C206 IN LINE 253 OF TEST.C: 'AskRec': missing function-prototype
+ 254   3                              Beep();
+*** WARNING C206 IN LINE 254 OF TEST.C: 'Beep': missing function-prototype
+ 255   3                      }
+ 256   2      
+ 257   2              }
+ 258   1              
+ 259   1      }
+ 260          /*
+ 261          if(KEY1 ==0 ) 
+ 262                          {
+ 263                                  P0=seg[1];
+ 264                              TxBuf[1] = 0x86 ;
+ 265                              tf = 1 ; 
+ 266                      }
+ 267                     if(KEY2 ==0 )
+ 268                     {
+ 269                                  P0=seg[2];
+ 270                                  TxBuf[2] =1 ;
+ 271                                  tf = 1 ; 
+ 272                     }
+ 273                     if (tf==1)
+ 274                 {        
+ 275                                  nRF24L01_TxPacket(TxBuf);       
+ 276                                  TxBuf[1] = 0x00;
+ 277                                  TxBuf[2] = 0x00;
+ 278                                  tf=0;
+ 279                                  Delay(1000);
+ 280                     }
+ 281                          SetRX_Mode();
+ 282                          nRF24L01_RxPacket(RxBuf);
+ 283                          if(RxBuf[1])
+ 284                          {                                       
+ 285                                  if(     RxBuf[1]==0x86)
+ 286                                  {               
+ 287                                          P0=seg[3];
+ 288                                  }
+ 289                                  Delay(1000);
+ 290                          }
+ 291                  
+ 292                          RxBuf[1] = 0x00;
+ 293                          RxBuf[2] = 0x00;
+ 294          */
+
+C51 COMPILER V9.00   TEST                                                                  11/15/2014 15:52:00 PAGE 6   
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    556    ----
+   CODE SIZE        =    471    ----
    CONSTANT SIZE    =     40    ----
    XDATA SIZE       =   ----    ----
-C51 COMPILER V9.00   TEST                                                                  11/04/2014 20:20:22 PAGE 6   
-
    PDATA SIZE       =   ----    ----
    DATA SIZE        =     21      57
    IDATA SIZE       =   ----    ----
@@ -327,4 +332,4 @@ MODULE INFORMATION:   STATIC OVERLAYABLE
 END OF MODULE INFORMATION.
 
 
-C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
+C51 COMPILATION COMPLETE.  3 WARNING(S),  0 ERROR(S)
