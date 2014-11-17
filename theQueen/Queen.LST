@@ -1,0 +1,582 @@
+C51 COMPILER V9.00   QUEEN                                                                 11/17/2014 17:19:04 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE QUEEN
+OBJECT MODULE PLACED IN Queen.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Queen.c COMPACT BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <intrins.h>    
+   3          #include<stdio.h>
+   4          #include<string.h>
+   5          
+   6          //********************************************************************************************************
+             -*************************************
+   7          #ifndef __LCD_H_
+   8          #define __LCD_H_
+   9          /**********************************
+  10          当使用的是4位数据传输的时候定义，
+  11          使用8位取消这个定义
+  12          **********************************/
+  13          #define LCD1602_4PINS
+  14          /**********************************
+  15          包含头文件
+  16          **********************************/
+  17          //#include<reg51.h>
+  18          //---重定义关键词---//
+  19          //#ifndef uchar
+  20          //#define uchar unsigned char
+  21          //#endif
+  22          //
+  23          //#ifndef uint 
+  24          //#define uint unsigned int
+  25          //#endif
+  26          /**********************************
+  27          PIN口定义
+  28          **********************************/
+  29          #define LCD1602_DATAPINS P0
+  30          sbit LCD1602_E=P2^7;
+  31          sbit LCD1602_RW=P2^5;
+  32          sbit LCD1602_RS=P2^6;
+  33          ///**********************************
+  34          //函数声明
+  35          //**********************************/
+  36          ///*在51单片机12MHZ时钟下的延时函数*/
+  37          //void Lcd1602_Delay1ms(uint c);   //误差 0us
+  38          ///*LCD1602写入8位命令子函数*/
+  39          //void LcdWriteCom(uchar com);
+  40          ///*LCD1602写入8位数据子函数*/  
+  41          //void LcdWriteData(uchar dat)  ;
+  42          ///*LCD1602初始化子程序*/               
+  43          //void LcdInit();                                                 
+  44          #endif
+  45          //********************************************************************************************************
+             -*************************************
+  46          
+  47          typedef unsigned char uchar;
+  48          typedef unsigned char uint;
+  49          unsigned char TxBuf[20]={0};
+  50          unsigned char RxBuf[20]={0};
+  51          //****************************************NRF24L01端口定义***************************************
+  52          sbit    MISO    =P1^3;
+  53          sbit    MOSI    =P1^4;
+C51 COMPILER V9.00   QUEEN                                                                 11/17/2014 17:19:04 PAGE 2   
+
+  54          sbit    SCK         =P1^2;
+  55          sbit    CE          =P1^1;
+  56          sbit    CSN             =P3^2;
+  57          sbit    IRQ             =P3^3;
+  58          //************************************按键***************************************************
+  59          sbit    KEY1=P3^6;
+  60          sbit    KEY2=P3^7;
+  61          //************************************数码管位选*********************************************
+  62          sbit    led3=P2^0;
+  63          sbit    led2=P2^1;
+  64          sbit    led1=P2^2;
+  65          sbit    led0=P2^3;
+  66          //************************************蜂明器***************************************************
+  67          sbit    BELL=P3^4;
+  68          //***********************************数码管0-9编码*******************************************
+  69          uchar seg[10]={0xC0,0xCF,0xA4,0xB0,0x99,0x92,0x82,0xF8,0x80,0x90};         //0~~9段码
+  70          //*********************************************NRF24L01*************************************
+  71          #define TX_ADR_WIDTH    5       // 5 uints TX address width
+  72          #define RX_ADR_WIDTH    5       // 5 uints RX address width
+  73          #define TX_PLOAD_WIDTH  20      // 20 uints TX payload
+  74          #define RX_PLOAD_WIDTH  20      // 20 uints TX payload
+  75          uint const TX_ADDRESS[TX_ADR_WIDTH]= {0x34,0x43,0x10,0x10,0x01};        //本地地址
+  76          uint const RX_ADDRESS[RX_ADR_WIDTH]= {0x34,0x43,0x10,0x10,0x01};        //接收地址
+  77          //***************************************NRF24L01寄存器指令***********************************************
+             -********
+  78          #define READ_REG        0x00    // 读寄存器指令
+  79          #define WRITE_REG       0x20    // 写寄存器指令
+  80          #define RD_RX_PLOAD     0x61    // 读取接收数据指令
+  81          #define WR_TX_PLOAD     0xA0    // 写待发数据指令
+  82          #define FLUSH_TX        0xE1    // 冲洗发送 FIFO指令
+  83          #define FLUSH_RX        0xE2    // 冲洗接收 FIFO指令
+  84          #define REUSE_TX_PL     0xE3    // 定义重复装载数据指令
+  85          #define NOP             0xFF    // 保留
+  86          //*************************************SPI(nRF24L01)寄存器地址********************************************
+             -********
+  87          #define CONFIG          0x00  // 配置收发状态，CRC校验模式以及收发状态响应方式
+  88          #define EN_AA           0x01  // 自动应答功能设置
+  89          #define EN_RXADDR       0x02  // 可用信道设置
+  90          #define SETUP_AW        0x03  // 收发地址宽度设置
+  91          #define SETUP_RETR      0x04  // 自动重发功能设置
+  92          #define RF_CH           0x05  // 工作频率设置
+  93          #define RF_SETUP        0x06  // 发射速率、功耗功能设置
+  94          #define STATUS          0x07  // 状态寄存器
+  95          #define OBSERVE_TX      0x08  // 发送监测功能
+  96          #define CD              0x09  // 地址检测           
+  97          #define RX_ADDR_P0      0x0A  // 频道0接收数据地址
+  98          #define RX_ADDR_P1      0x0B  // 频道1接收数据地址
+  99          #define RX_ADDR_P2      0x0C  // 频道2接收数据地址
+ 100          #define RX_ADDR_P3      0x0D  // 频道3接收数据地址
+ 101          #define RX_ADDR_P4      0x0E  // 频道4接收数据地址
+ 102          #define RX_ADDR_P5      0x0F  // 频道5接收数据地址
+ 103          #define TX_ADDR         0x10  // 发送地址寄存器
+ 104          #define RX_PW_P0        0x11  // 接收频道0接收数据长度
+ 105          #define RX_PW_P1        0x12  // 接收频道0接收数据长度
+ 106          #define RX_PW_P2        0x13  // 接收频道0接收数据长度
+ 107          #define RX_PW_P3        0x14  // 接收频道0接收数据长度
+ 108          #define RX_PW_P4        0x15  // 接收频道0接收数据长度
+ 109          #define RX_PW_P5        0x16  // 接收频道0接收数据长度
+ 110          #define FIFO_STATUS     0x17  // FIFO栈入栈出状态寄存器设置
+ 111          
+ 112          #define NUM     1
+ 113          //**************************************************************************************
+C51 COMPILER V9.00   QUEEN                                                                 11/17/2014 17:19:04 PAGE 3   
+
+ 114          void Delay(unsigned int s);
+ 115          void inerDelay_us(unsigned char n);
+ 116          void init_NRF24L01(void);
+ 117          uint SPI_RW(uint uchar);
+ 118          uchar SPI_Read(uchar reg);
+ 119          void SetRX_Mode(void);
+ 120          uint SPI_RW_Reg(uchar reg, uchar value);
+ 121          uint SPI_Read_Buf(uchar reg, uchar *pBuf, uchar uchars);
+ 122          uint SPI_Write_Buf(uchar reg, uchar *pBuf, uchar uchars);
+ 123          unsigned char nRF24L01_RxPacket(unsigned char* rx_buf);
+ 124          void nRF24L01_TxPacket(unsigned char * tx_buf);
+ 125          //*****************************************长延时*****************************************
+ 126          void Delay(unsigned int s)
+ 127          {
+ 128   1              unsigned int i;
+ 129   1              for(i=0; i<s; i++);
+ 130   1              for(i=0; i<s; i++);
+ 131   1      }
+ 132          //******************************************************************************************
+ 133          uint    bdata sta;   //状态标志
+ 134          sbit    RX_DR   =sta^6;
+ 135          sbit    TX_DS   =sta^5;
+ 136          sbit    MAX_RT  =sta^4;
+ 137          /******************************************************************************************
+ 138          /*延时函数
+ 139          /******************************************************************************************/
+ 140          void inerDelay_us(unsigned char n)
+ 141          {
+ 142   1              for(;n>0;n--)
+ 143   1                      _nop_();
+ 144   1      }
+ 145          //****************************************************************************************
+ 146          /*NRF24L01初始化
+ 147          //***************************************************************************************/
+ 148          void init_NRF24L01(void)
+ 149          {
+ 150   1          inerDelay_us(100);
+ 151   1              CE=0;    // chip enable
+ 152   1              CSN=1;   // Spi  disable 
+ 153   1              SCK=0;   // 
+ 154   1              SPI_Write_Buf(WRITE_REG + TX_ADDR, TX_ADDRESS, TX_ADR_WIDTH);    // 写本地地址  
+ 155   1              SPI_Write_Buf(WRITE_REG + RX_ADDR_P0, RX_ADDRESS, RX_ADR_WIDTH); // 写接收端地址
+ 156   1              SPI_RW_Reg(WRITE_REG + EN_AA, 0x01);      //  频道0自动 ACK应答允许     
+ 157   1              SPI_RW_Reg(WRITE_REG + EN_RXADDR, 0x01);  //  允许接收地址只有频道0，如果需要多频道可以参考Page21  
+ 158   1              SPI_RW_Reg(WRITE_REG + RF_CH, 0);        //   设置信道工作为2.4GHZ，收发必须一致
+ 159   1              SPI_RW_Reg(WRITE_REG + RX_PW_P0, RX_PLOAD_WIDTH); //设置接收数据长度，本次设置为32字节
+ 160   1              SPI_RW_Reg(WRITE_REG + RF_SETUP, 0x07);                 //设置发射速率为1MHZ，发射功率为最大值0dB
+ 161   1      }
+ 162          /****************************************************************************************************
+ 163          /*函数：uint SPI_RW(uint uchar)
+ 164          /*功能：NRF24L01的SPI写时序
+ 165          /****************************************************************************************************/
+ 166          uint SPI_RW(uint uchar)
+ 167          {
+ 168   1              uint bit_ctr;
+ 169   1              for(bit_ctr=0;bit_ctr<8;bit_ctr++) // output 8-bit
+ 170   1              {
+ 171   2                      MOSI = (uchar & 0x80);         // output 'uchar', MSB to MOSI
+ 172   2                      uchar = (uchar << 1);           // shift next bit into MSB..
+ 173   2                      SCK = 1;                      // Set SCK high..
+ 174   2                      uchar |= MISO;                    // capture current MISO bit
+ 175   2                      SCK = 0;                          // ..then set SCK low again
+C51 COMPILER V9.00   QUEEN                                                                 11/17/2014 17:19:04 PAGE 4   
+
+ 176   2              }
+ 177   1          return(uchar);                        // return read uchar
+ 178   1      }
+ 179          /****************************************************************************************************
+ 180          /*函数：uchar SPI_Read(uchar reg)
+ 181          /*功能：NRF24L01的SPI时序
+ 182          /****************************************************************************************************/
+ 183          uchar SPI_Read(uchar reg)
+ 184          {
+ 185   1              uchar reg_val;
+ 186   1              
+ 187   1              CSN = 0;                // CSN low, initialize SPI communication...
+ 188   1              SPI_RW(reg);            // Select register to read from..
+ 189   1              reg_val = SPI_RW(0);    // ..then read registervalue
+ 190   1              CSN = 1;                // CSN high, terminate SPI communication
+ 191   1              
+ 192   1              return(reg_val);        // return register value
+ 193   1      }
+ 194          /****************************************************************************************************/
+ 195          /*功能：NRF24L01读写寄存器函数
+ 196          /****************************************************************************************************/
+ 197          uint SPI_RW_Reg(uchar reg, uchar value)
+ 198          {
+ 199   1              uint status;
+ 200   1              
+ 201   1              CSN = 0;                   // CSN low, init SPI transaction
+ 202   1              status = SPI_RW(reg);      // select register
+ 203   1              SPI_RW(value);             // ..and write value to it..
+ 204   1              CSN = 1;                   // CSN high again
+ 205   1              
+ 206   1              return(status);            // return nRF24L01 status uchar
+ 207   1      }
+ 208          /****************************************************************************************************/
+ 209          /*函数：uint SPI_Read_Buf(uchar reg, uchar *pBuf, uchar uchars)
+ 210          /*功能: 用于读数据，reg：为寄存器地址，pBuf：为待读出数据地址，uchars：读出数据的个数
+ 211          /****************************************************************************************************/
+ 212          uint SPI_Read_Buf(uchar reg, uchar *pBuf, uchar uchars)
+ 213          {
+ 214   1              uint status,uchar_ctr;
+ 215   1              
+ 216   1              CSN = 0;                                // Set CSN low, init SPI tranaction
+ 217   1              status = SPI_RW(reg);                   // Select register to write to and read status uchar
+ 218   1              
+ 219   1              for(uchar_ctr=0;uchar_ctr<uchars;uchar_ctr++)
+ 220   1                      pBuf[uchar_ctr] = SPI_RW(0);    // 
+ 221   1              
+ 222   1              CSN = 1;                           
+ 223   1              
+ 224   1              return(status);                    // return nRF24L01 status uchar
+ 225   1      }
+ 226          /*********************************************************************************************************
+ 227          /*函数：uint SPI_Write_Buf(uchar reg, uchar *pBuf, uchar uchars)
+ 228          /*功能: 用于写数据：为寄存器地址，pBuf：为待写入数据地址，uchars：写入数据的个数
+ 229          /*********************************************************************************************************
+             -/
+ 230          uint SPI_Write_Buf(uchar reg, uchar *pBuf, uchar uchars)
+ 231          {
+ 232   1              uint status,uchar_ctr;
+ 233   1              
+ 234   1              CSN = 0;            //SPI使能       
+ 235   1              status = SPI_RW(reg);   
+ 236   1              for(uchar_ctr=0; uchar_ctr<uchars; uchar_ctr++) //
+C51 COMPILER V9.00   QUEEN                                                                 11/17/2014 17:19:04 PAGE 5   
+
+ 237   1                      SPI_RW(*pBuf++);
+ 238   1              CSN = 1;           //关闭SPI
+ 239   1              return(status);    // 
+ 240   1      }
+ 241          /****************************************************************************************************/
+ 242          /*函数：void SetRX_Mode(void)
+ 243          /*功能：数据接收配置 
+ 244          /****************************************************************************************************/
+ 245          void SetRX_Mode(void)
+ 246          {
+ 247   1              CE=0;
+ 248   1              SPI_RW_Reg(WRITE_REG + CONFIG, 0x0f);                   // IRQ收发完成中断响应，16位CRC ，主接收
+ 249   1              CE = 1; 
+ 250   1              inerDelay_us(130);
+ 251   1      }
+ 252          /******************************************************************************************************/
+ 253          /*函数：unsigned char nRF24L01_RxPacket(unsigned char* rx_buf)
+ 254          /*功能：数据读取后放如rx_buf接收缓冲区中
+ 255          /******************************************************************************************************/
+ 256          unsigned char nRF24L01_RxPacket(unsigned char* rx_buf)
+ 257          {
+ 258   1          unsigned char revale=0;
+ 259   1              sta=SPI_Read(STATUS);   // 读取状态寄存其来判断数据接收状况
+ 260   1              if(RX_DR)                               // 判断是否接收到数据
+ 261   1              {
+ 262   2                  CE = 0;                     //SPI使能
+ 263   2                      SPI_Read_Buf(RD_RX_PLOAD,rx_buf,TX_PLOAD_WIDTH);// read receive payload from RX_FIFO buffer
+ 264   2                      revale =1;                      //读取数据完成标志
+ 265   2              }
+ 266   1              SPI_RW_Reg(WRITE_REG+STATUS,sta);   //接收到数据后RX_DR,TX_DS,MAX_PT都置高为1，通过写1来清楚中断标志
+ 267   1              return revale;
+ 268   1      }
+ 269          /*********************************************************************************************************
+             -**
+ 270          /*函数：void nRF24L01_TxPacket(unsigned char * tx_buf)
+ 271          /*功能：发送 tx_buf中数据
+ 272          /*********************************************************************************************************
+             -*/
+ 273          void nRF24L01_TxPacket(unsigned char * tx_buf)
+ 274          {
+ 275   1              CE=0;                   //StandBy I模式 
+ 276   1              SPI_Write_Buf(WRITE_REG + RX_ADDR_P0, TX_ADDRESS, TX_ADR_WIDTH); // 装载接收端地址
+ 277   1              SPI_Write_Buf(WR_TX_PLOAD, tx_buf, TX_PLOAD_WIDTH);                      // 装载数据    
+ 278   1              SPI_RW_Reg(WRITE_REG + CONFIG, 0x0e);                    // IRQ收发完成中断响应，16位CRC，主发送
+ 279   1              CE=1;            //置高CE，激发数据发送
+ 280   1              inerDelay_us(10);
+ 281   1      }
+ 282          //********************************************************************************************************
+             -*************************************
+ 283          //LCD START
+ 284          //********************************************************************************************************
+             -*************************************
+ 285          /*******************************************************************************
+ 286          * 函 数 名         : Lcd1602_Delay1ms
+ 287          * 函数功能                 : 延时函数，延时1ms
+ 288          * 输    入         : c
+ 289          * 输    出         : 无
+ 290          * 说    名         : 该函数是在12MHZ晶振下，12分频单片机的延时。
+ 291          *******************************************************************************/
+ 292          
+ 293          void Lcd1602_Delay1ms(uint c)   //误差 0us
+ 294          {
+C51 COMPILER V9.00   QUEEN                                                                 11/17/2014 17:19:04 PAGE 6   
+
+ 295   1          uchar a,b;
+ 296   1              for (; c>0; c--)
+ 297   1              {
+ 298   2                       for (b=199;b>0;b--)
+ 299   2                       {
+ 300   3                              for(a=1;a>0;a--);
+ 301   3                       }      
+ 302   2              }
+ 303   1              
+ 304   1      }
+ 305          
+ 306          /*******************************************************************************
+ 307          * 函 数 名         : LcdWriteCom
+ 308          * 函数功能                 : 向LCD写入一个字节的命令
+ 309          * 输    入         : com
+ 310          * 输    出         : 无
+ 311          *******************************************************************************/
+ 312          #ifndef         LCD1602_4PINS    //当没有定义这个LCD1602_4PINS时
+              void LcdWriteCom(uchar com)       //写入命令
+              {
+                      LCD1602_E = 0;     //使能
+                      LCD1602_RS = 0;    //选择发送命令
+                      LCD1602_RW = 0;    //选择写入
+                      
+                      LCD1602_DATAPINS = com;     //放入命令
+                      Lcd1602_Delay1ms(1);            //等待数据稳定
+              
+                      LCD1602_E = 1;            //写入时序
+                      Lcd1602_Delay1ms(5);      //保持时间
+                      LCD1602_E = 0;
+              }
+              #else 
+ 327          void LcdWriteCom(uchar com)       //写入命令
+ 328          {
+ 329   1              LCD1602_E = 0;   //使能清零
+ 330   1              LCD1602_RS = 0;  //选择写入命令
+ 331   1              LCD1602_RW = 0;  //选择写入
+ 332   1      
+ 333   1              LCD1602_DATAPINS = com; //由于4位的接线是接到P0口的高四位，所以传送高四位不用改
+ 334   1              Lcd1602_Delay1ms(1);
+ 335   1      
+ 336   1              LCD1602_E = 1;   //写入时序
+ 337   1              Lcd1602_Delay1ms(5);
+ 338   1              LCD1602_E = 0;
+ 339   1      
+ 340   1      //      Lcd1602_Delay1ms(1);
+ 341   1              LCD1602_DATAPINS = com << 4; //发送低四位
+ 342   1              Lcd1602_Delay1ms(1);
+ 343   1      
+ 344   1              LCD1602_E = 1;   //写入时序
+ 345   1              Lcd1602_Delay1ms(5);
+ 346   1              LCD1602_E = 0;
+ 347   1      }
+ 348          #endif
+ 349          /*******************************************************************************
+ 350          * 函 数 名         : LcdWriteData
+ 351          * 函数功能                 : 向LCD写入一个字节的数据
+ 352          * 输    入         : dat
+ 353          * 输    出         : 无
+ 354          *******************************************************************************/                   
+ 355          #ifndef         LCD1602_4PINS              
+              void LcdWriteData(uchar dat)                    //写入数据
+C51 COMPILER V9.00   QUEEN                                                                 11/17/2014 17:19:04 PAGE 7   
+
+              {
+                      LCD1602_E = 0;  //使能清零
+                      LCD1602_RS = 1; //选择输入数据
+                      LCD1602_RW = 0; //选择写入
+              
+                      LCD1602_DATAPINS = dat; //写入数据
+                      Lcd1602_Delay1ms(1);
+              
+                      LCD1602_E = 1;   //写入时序
+                      Lcd1602_Delay1ms(5);   //保持时间
+                      LCD1602_E = 0;
+              }
+              #else
+ 370          void LcdWriteData(uchar dat)                    //写入数据
+ 371          {
+ 372   1              LCD1602_E = 0;    //使能清零
+ 373   1              LCD1602_RS = 1;   //选择写入数据
+ 374   1              LCD1602_RW = 0;   //选择写入
+ 375   1      
+ 376   1              LCD1602_DATAPINS = dat; //由于4位的接线是接到P0口的高四位，所以传送高四位不用改
+ 377   1              Lcd1602_Delay1ms(1);
+ 378   1      
+ 379   1              LCD1602_E = 1;    //写入时序
+ 380   1              Lcd1602_Delay1ms(5);
+ 381   1              LCD1602_E = 0;
+ 382   1      
+ 383   1              LCD1602_DATAPINS = dat << 4; //写入低四位
+ 384   1              Lcd1602_Delay1ms(1);
+ 385   1      
+ 386   1              LCD1602_E = 1;    //写入时序
+ 387   1              Lcd1602_Delay1ms(5);
+ 388   1              LCD1602_E = 0;
+ 389   1      }
+ 390          #endif
+ 391          /*******************************************************************************
+ 392          * 函 数 名       : LcdInit()
+ 393          * 函数功能               : 初始化LCD屏
+ 394          * 输    入       : 无
+ 395          * 输    出       : 无
+ 396          *******************************************************************************/                   
+ 397          #ifndef         LCD1602_4PINS
+              void LcdInit()                                            //LCD初始化子程序
+              {
+                      LcdWriteCom(0x38);  //开显示
+                      LcdWriteCom(0x0c);  //开显示不显示光标
+                      LcdWriteCom(0x06);  //写一个指针加1
+                      LcdWriteCom(0x01);  //清屏
+                      LcdWriteCom(0x80);  //设置数据指针起点
+              }
+              #else
+ 407          void LcdInit()                                            //LCD初始化子程序
+ 408          {
+ 409   1              LcdWriteCom(0x32);       //将8位总线转为4位总线
+ 410   1              LcdWriteCom(0x28);       //在四位线下的初始化
+ 411   1              LcdWriteCom(0x0c);  //开显示不显示光标
+ 412   1              LcdWriteCom(0x06);  //写一个指针加1
+ 413   1              LcdWriteCom(0x01);  //清屏
+ 414   1              LcdWriteCom(0x80);  //设置数据指针起点
+ 415   1      }
+ 416          #endif
+ 417          //********************************************************************************************************
+             -*************************************
+C51 COMPILER V9.00   QUEEN                                                                 11/17/2014 17:19:04 PAGE 8   
+
+ 418          //LCD END
+ 419          //********************************************************************************************************
+             -*************************************
+ 420          
+ 421          
+ 422          //************************************主函数************************************************************
+ 423          void main(void)
+ 424          {
+ 425   1              int Asking,Quizing,QzFn,i;
+ 426   1              unsigned char tf =0;
+ 427   1              char Ans[NUM];
+ 428   1              unsigned char AskSt[9]="Ask Start";
+ 429   1              unsigned char AskStu[17]="Student No.XX Ask";
+ 430   1              unsigned char AskFnsh[10]="Ask Finish";
+ 431   1              unsigned char QzSt[10]="Quiz Start";
+ 432   1              unsigned char QzFnsh[11]="Quiz Finish";
+ 433   1                                                                 
+ 434   1              Asking = Quizing = QzFn = 0;
+ 435   1      
+ 436   1              LcdWriteCom(0x32);       //将8位总线转为4位总线
+ 437   1              LcdWriteCom(0x28);       //在四位线下的初始化
+ 438   1              LcdWriteCom(0x0c);  //开显示不显示光标
+ 439   1              LcdWriteCom(0x06);  //写一个指针加1
+ 440   1              LcdWriteCom(0x01);  //清屏
+ 441   1              LcdWriteCom(0x80);  //设置数据指针起点
+ 442   1      
+ 443   1          init_NRF24L01() ;
+ 444   1              led0=0;led1=0;led2=0;led3=0;
+ 445   1              while(1)
+ 446   1              {
+ 447   2                      if(KEY1 == 0 && Asking){
+ 448   3                              Asking = 0;
+ 449   3                              LcdWriteCom(0x01);  //清屏
+ 450   3                              LcdWriteCom(0x80);  //设置数据指针起点  
+ 451   3                              for(i=0;i<3;i++)
+ 452   3                              {
+ 453   4                                      LcdWriteData(AskFnsh[i]);       
+ 454   4                              }
+ 455   3                              LcdWriteCom(0xC0); 
+ 456   3                              for(i=3;i<10;i++)
+ 457   3                              {
+ 458   4                                      LcdWriteData(AskFnsh[i]);       
+ 459   4                              }
+ 460   3                          TxBuf[1] = 0x02;
+ 461   3                          tf = 1 ; 
+ 462   3                  }
+ 463   2                  if(KEY2==0 && !Quizing && !Asking){ 
+ 464   3                              Quizing = 1;
+ 465   3                              for(i = 0;i<NUM;i++)
+ 466   3                                      Ans[i] = 0;
+ 467   3                  }
+ 468   2                      if(Quizing){
+ 469   3                              P0 = seg[2];
+ 470   3                          TxBuf[1] = 0x03;
+ 471   3                              tf = 1 ; 
+ 472   3                      }
+ 473   2                      if(QzFn){
+ 474   3                          TxBuf[1] = 0x04;
+ 475   3                              QzFn = 0;
+ 476   3                              tf = 1 ; 
+ 477   3                      }
+ 478   2                  if (tf==1){ 
+C51 COMPILER V9.00   QUEEN                                                                 11/17/2014 17:19:04 PAGE 9   
+
+ 479   3                              nRF24L01_TxPacket(TxBuf);       
+ 480   3                              TxBuf[1] = 0x00;
+ 481   3                              tf = 0;
+ 482   3                              Delay(1000);
+ 483   3                  }
+ 484   2                      SetRX_Mode();
+ 485   2                      nRF24L01_RxPacket(RxBuf);
+ 486   2                      if(RxBuf[1]){                                   
+ 487   3                              if(RxBuf[1]>=0x10 && RxBuf[1]<=0x3f){
+ 488   4                                      Asking = 1;             
+ 489   4                                      AskStu[11] = (RxBuf[1]-0x10)/10+'0';
+ 490   4                                      AskStu[12] = (RxBuf[1]-0x10)%10+'0';
+ 491   4                                      LcdWriteCom(0x01);  //清屏
+ 492   4                                      LcdWriteCom(0x80);  //设置数据指针起点  
+ 493   4                                      for(i=14;i<17;i++)
+ 494   4                                      {
+ 495   5                                              LcdWriteData(AskStu[i]);        
+ 496   5                                      }
+ 497   4                                      LcdWriteCom(0xC0); 
+ 498   4                                      for(i=0;i<13;i++)
+ 499   4                                      {
+ 500   5                                              LcdWriteData(AskStu[i]);        
+ 501   5                                      }
+ 502   4                              }       
+ 503   3                              else if(Quizing){
+ 504   4                                      QzFn = 1;
+ 505   4                                      if(RxBuf[1]>=0x40 && RxBuf[1]<=0x6f){
+ 506   5                                              Ans[RxBuf[1]-0x41] = 'a';
+ 507   5                                      }
+ 508   4                                      else if(RxBuf[1]>=0x70 && RxBuf[1]<=0x9f){
+ 509   5                                              Ans[RxBuf[1]-0x71] = 'b';
+ 510   5                                      }
+ 511   4                                      else if(RxBuf[1]>=0xa0 && RxBuf[1]<=0xcf){
+ 512   5                                              Ans[RxBuf[1]-0xa1] = 'c';
+ 513   5                                      }
+ 514   4                                      else if(RxBuf[1]>=0xd0 && RxBuf[1]<=0xff){
+ 515   5                                              Ans[RxBuf[1]-0xd1] = 'd';
+ 516   5                                      } 
+ 517   4                                      for(i = 0;i<NUM;i++){
+ 518   5                                              if(Ans[i] == 0)
+ 519   5                                                      QzFn = 0;       
+ 520   5                                      }
+ 521   4                                      if(QzFn){
+ 522   5                                              Quizing = 0;
+ 523   5                                              P0 = 0;
+ 524   5                                      }       
+ 525   4                              }
+ 526   3                              Delay(1000);
+ 527   3                      }
+ 528   2                      RxBuf[1] = 0x00;
+ 529   2              }
+ 530   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1303    ----
+   CONSTANT SIZE    =     57    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =     60      83
+   DATA SIZE        =      1    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+C51 COMPILER V9.00   QUEEN                                                                 11/17/2014 17:19:04 PAGE 10  
+
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
