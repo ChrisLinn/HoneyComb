@@ -433,30 +433,14 @@ void main(void)
 							   
 	Asking = Quizing = QzFn = 0;
 
-	LcdWriteCom(0x32);	 //将8位总线转为4位总线
-	LcdWriteCom(0x28);	 //在四位线下的初始化
-	LcdWriteCom(0x0c);  //开显示不显示光标
-	LcdWriteCom(0x06);  //写一个指针加1
-	LcdWriteCom(0x01);  //清屏
-	LcdWriteCom(0x80);  //设置数据指针起点
-
     init_NRF24L01() ;
 	led0=0;led1=0;led2=0;led3=0;
+	P0 = 0xBF;
 	while(1)
 	{
 		if(KEY1 == 0 && Asking){
 			Asking = 0;
-			LcdWriteCom(0x01);  //清屏
-			LcdWriteCom(0x80);  //设置数据指针起点	
-			for(i=0;i<3;i++)
-			{
-				LcdWriteData(AskFnsh[i]);	
-			}
-			LcdWriteCom(0xC0); 
-			for(i=4;i<10;i++)
-			{
-				LcdWriteData(AskFnsh[i]);	
-			}
+			P0 = 0xBF;
 		    TxBuf[1] = 0x02;
 		    tf = 1 ; 
 	    }
@@ -464,17 +448,7 @@ void main(void)
 			Quizing = 1;
 			for(i = 0;i<NUM;i++)
 				Ans[i] = 0;
-			LcdWriteCom(0x01);  //清屏
-			LcdWriteCom(0x80);  //设置数据指针起点	
-			for(i=0;i<4;i++)
-			{
-				LcdWriteData(QzSt[i]);	
-			}
-			LcdWriteCom(0xC0); 
-			for(i=5;i<10;i++)
-			{
-				LcdWriteData(QzSt[i]);	
-			}
+			P0 = seg[2];
 	    }
 		if(Quizing){
 		    TxBuf[1] = 0x03;
@@ -482,7 +456,6 @@ void main(void)
 		}
 		if(QzFn){
 		    TxBuf[1] = 0x04;
-			QzFn = 0;
 			tf = 1 ; 
 		}
 	    if (tf==1){	
@@ -495,27 +468,13 @@ void main(void)
 		nRF24L01_RxPacket(RxBuf);
    		if(RxBuf[1]){					
 			if(RxBuf[1]>=0x10 && RxBuf[1]<=0x3f){
-				Asking = 1;	 	
-				AskStu[11] = (RxBuf[1]-0x10)/10+'0';
-				AskStu[12] = (RxBuf[1]-0x10)%10+'0';
-				LcdWriteCom(0x01);  //清屏
-				LcdWriteCom(0x80);  //设置数据指针起点	
-				for(i=14;i<17;i++)
-				{
-					LcdWriteData(AskStu[i]);	
-				}
-				LcdWriteCom(0xC0); 
-				for(i=0;i<13;i++)
-				{
-					LcdWriteData(AskStu[i]);	
-				}
+				Asking = 1;	
+				P0 = seg[RxBuf[1]-0x10];
 			}	
 			else if(Quizing){
 				QzFn = 1;
 				if(RxBuf[1]>=0x40 && RxBuf[1]<=0x6f){
 					Ans[RxBuf[1]-0x41] = 'a';	
-					LcdWriteCom(0x01);  //清屏  
-					while(1) ;
 				}
 				else if(RxBuf[1]>=0x70 && RxBuf[1]<=0x9f){
 					Ans[RxBuf[1]-0x71] = 'b';
@@ -531,10 +490,15 @@ void main(void)
 						QzFn = 0;	
 				}
 				if(QzFn){
-					Quizing = 0;
-				}	
+					Quizing = 0; 
+					P0 = 0xBF;
+				}
+					
 			}
 			Delay(1000);
+		}
+		if(QzFn && !RxBuf[1]){
+			QzFn = 0;
 		}
 		RxBuf[1] = 0x00;
 	}

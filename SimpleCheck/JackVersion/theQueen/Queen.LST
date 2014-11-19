@@ -1,4 +1,4 @@
-C51 COMPILER V9.00   QUEEN                                                                 11/18/2014 22:46:54 PAGE 1   
+C51 COMPILER V9.00   QUEEN                                                                 11/18/2014 23:28:26 PAGE 1   
 
 
 C51 COMPILER V9.00, COMPILATION OF MODULE QUEEN
@@ -62,7 +62,7 @@ line level    source
   51          //****************************************NRF24L01端口定义***************************************
   52          sbit    MISO    =P1^3;
   53          sbit    MOSI    =P1^4;
-C51 COMPILER V9.00   QUEEN                                                                 11/18/2014 22:46:54 PAGE 2   
+C51 COMPILER V9.00   QUEEN                                                                 11/18/2014 23:28:26 PAGE 2   
 
   54          sbit    SCK         =P1^2;
   55          sbit    CE          =P1^1;
@@ -126,7 +126,7 @@ line level    source
  111          
  112          #define NUM     1
  113          //**************************************************************************************
-C51 COMPILER V9.00   QUEEN                                                                 11/18/2014 22:46:54 PAGE 3   
+C51 COMPILER V9.00   QUEEN                                                                 11/18/2014 23:28:26 PAGE 3   
 
  114          void Delay(unsigned int s);
  115          void inerDelay_us(unsigned char n);
@@ -190,7 +190,7 @@ line level    source
  173   2                      SCK = 1;                      // Set SCK high..
  174   2                      uchar |= MISO;                    // capture current MISO bit
  175   2                      SCK = 0;                          // ..then set SCK low again
-C51 COMPILER V9.00   QUEEN                                                                 11/18/2014 22:46:54 PAGE 4   
+C51 COMPILER V9.00   QUEEN                                                                 11/18/2014 23:28:26 PAGE 4   
 
  176   2              }
  177   1          return(uchar);                        // return read uchar
@@ -254,7 +254,7 @@ line level    source
  234   1              CSN = 0;            //SPI使能       
  235   1              status = SPI_RW(reg);   
  236   1              for(uchar_ctr=0; uchar_ctr<uchars; uchar_ctr++) //
-C51 COMPILER V9.00   QUEEN                                                                 11/18/2014 22:46:54 PAGE 5   
+C51 COMPILER V9.00   QUEEN                                                                 11/18/2014 23:28:26 PAGE 5   
 
  237   1                      SPI_RW(*pBuf++);
  238   1              CSN = 1;           //关闭SPI
@@ -318,7 +318,7 @@ line level    source
  292          
  293          void Lcd1602_Delay1ms(uint c)   //误差 0us
  294          {
-C51 COMPILER V9.00   QUEEN                                                                 11/18/2014 22:46:54 PAGE 6   
+C51 COMPILER V9.00   QUEEN                                                                 11/18/2014 23:28:26 PAGE 6   
 
  295   1          uchar a,b;
  296   1              for (; c>0; c--)
@@ -382,7 +382,7 @@ line level    source
  354          *******************************************************************************/                   
  355          #ifndef         LCD1602_4PINS              
               void LcdWriteData(uchar dat)                    //写入数据
-C51 COMPILER V9.00   QUEEN                                                                 11/18/2014 22:46:54 PAGE 7   
+C51 COMPILER V9.00   QUEEN                                                                 11/18/2014 23:28:26 PAGE 7   
 
               {
                       LCD1602_E = 0;  //使能清零
@@ -446,7 +446,7 @@ line level    source
  416          #endif
  417          //********************************************************************************************************
              -*************************************
-C51 COMPILER V9.00   QUEEN                                                                 11/18/2014 22:46:54 PAGE 8   
+C51 COMPILER V9.00   QUEEN                                                                 11/18/2014 23:28:26 PAGE 8   
 
  418          //LCD END
  419          //********************************************************************************************************
@@ -467,120 +467,82 @@ line level    source
  433   1                                                                 
  434   1              Asking = Quizing = QzFn = 0;
  435   1      
- 436   1              LcdWriteCom(0x32);       //将8位总线转为4位总线
- 437   1              LcdWriteCom(0x28);       //在四位线下的初始化
- 438   1              LcdWriteCom(0x0c);  //开显示不显示光标
- 439   1              LcdWriteCom(0x06);  //写一个指针加1
- 440   1              LcdWriteCom(0x01);  //清屏
- 441   1              LcdWriteCom(0x80);  //设置数据指针起点
- 442   1      
- 443   1          init_NRF24L01() ;
- 444   1              led0=0;led1=0;led2=0;led3=0;
- 445   1              while(1)
- 446   1              {
- 447   2                      if(KEY1 == 0 && Asking){
- 448   3                              Asking = 0;
- 449   3                              LcdWriteCom(0x01);  //清屏
- 450   3                              LcdWriteCom(0x80);  //设置数据指针起点  
- 451   3                              for(i=0;i<3;i++)
- 452   3                              {
- 453   4                                      LcdWriteData(AskFnsh[i]);       
- 454   4                              }
- 455   3                              LcdWriteCom(0xC0); 
- 456   3                              for(i=4;i<10;i++)
- 457   3                              {
- 458   4                                      LcdWriteData(AskFnsh[i]);       
- 459   4                              }
- 460   3                          TxBuf[1] = 0x02;
- 461   3                          tf = 1 ; 
- 462   3                  }
- 463   2                  if(KEY2==0 && !Quizing && !Asking){ 
- 464   3                              Quizing = 1;
- 465   3                              for(i = 0;i<NUM;i++)
- 466   3                                      Ans[i] = 0;
- 467   3                              LcdWriteCom(0x01);  //清屏
- 468   3                              LcdWriteCom(0x80);  //设置数据指针起点  
- 469   3                              for(i=0;i<4;i++)
- 470   3                              {
- 471   4                                      LcdWriteData(QzSt[i]);  
- 472   4                              }
- 473   3                              LcdWriteCom(0xC0); 
- 474   3                              for(i=5;i<10;i++)
- 475   3                              {
- 476   4                                      LcdWriteData(QzSt[i]);  
- 477   4                              }
- 478   3                  }
-C51 COMPILER V9.00   QUEEN                                                                 11/18/2014 22:46:54 PAGE 9   
+ 436   1          init_NRF24L01() ;
+ 437   1              led0=0;led1=0;led2=0;led3=0;
+ 438   1              P0 = 0xBF;
+ 439   1              while(1)
+ 440   1              {
+ 441   2                      if(KEY1 == 0 && Asking){
+ 442   3                              Asking = 0;
+ 443   3                              P0 = 0xBF;
+ 444   3                          TxBuf[1] = 0x02;
+ 445   3                          tf = 1 ; 
+ 446   3                  }
+ 447   2                  if(KEY2==0 && !Quizing && !Asking){ 
+ 448   3                              Quizing = 1;
+ 449   3                              for(i = 0;i<NUM;i++)
+ 450   3                                      Ans[i] = 0;
+ 451   3                              P0 = seg[2];
+ 452   3                  }
+ 453   2                      if(Quizing){
+ 454   3                          TxBuf[1] = 0x03;
+ 455   3                              tf = 1 ; 
+ 456   3                      }
+ 457   2                      if(QzFn){
+ 458   3                          TxBuf[1] = 0x04;
+ 459   3                              tf = 1 ; 
+ 460   3                      }
+ 461   2                  if (tf==1){ 
+ 462   3                              nRF24L01_TxPacket(TxBuf);       
+ 463   3                              TxBuf[1] = 0x00;
+ 464   3                              tf = 0;
+ 465   3                              Delay(1000);
+ 466   3                  }
+ 467   2                      SetRX_Mode();
+ 468   2                      nRF24L01_RxPacket(RxBuf);
+ 469   2                      if(RxBuf[1]){                                   
+ 470   3                              if(RxBuf[1]>=0x10 && RxBuf[1]<=0x3f){
+ 471   4                                      Asking = 1;     
+ 472   4                                      P0 = seg[RxBuf[1]-0x10];
+ 473   4                              }       
+ 474   3                              else if(Quizing){
+ 475   4                                      QzFn = 1;
+ 476   4                                      if(RxBuf[1]>=0x40 && RxBuf[1]<=0x6f){
+ 477   5                                              Ans[RxBuf[1]-0x41] = 'a';       
+ 478   5                                      }
+C51 COMPILER V9.00   QUEEN                                                                 11/18/2014 23:28:26 PAGE 9   
 
- 479   2                      if(Quizing){
- 480   3                          TxBuf[1] = 0x03;
- 481   3                              tf = 1 ; 
- 482   3                      }
- 483   2                      if(QzFn){
- 484   3                          TxBuf[1] = 0x04;
- 485   3                              QzFn = 0;
- 486   3                              tf = 1 ; 
- 487   3                      }
- 488   2                  if (tf==1){ 
- 489   3                              nRF24L01_TxPacket(TxBuf);       
- 490   3                              TxBuf[1] = 0x00;
- 491   3                              tf = 0;
- 492   3                              Delay(1000);
- 493   3                  }
- 494   2                      SetRX_Mode();
- 495   2                      nRF24L01_RxPacket(RxBuf);
- 496   2                      if(RxBuf[1]){                                   
- 497   3                              if(RxBuf[1]>=0x10 && RxBuf[1]<=0x3f){
- 498   4                                      Asking = 1;             
- 499   4                                      AskStu[11] = (RxBuf[1]-0x10)/10+'0';
- 500   4                                      AskStu[12] = (RxBuf[1]-0x10)%10+'0';
- 501   4                                      LcdWriteCom(0x01);  //清屏
- 502   4                                      LcdWriteCom(0x80);  //设置数据指针起点  
- 503   4                                      for(i=14;i<17;i++)
- 504   4                                      {
- 505   5                                              LcdWriteData(AskStu[i]);        
- 506   5                                      }
- 507   4                                      LcdWriteCom(0xC0); 
- 508   4                                      for(i=0;i<13;i++)
- 509   4                                      {
- 510   5                                              LcdWriteData(AskStu[i]);        
- 511   5                                      }
- 512   4                              }       
- 513   3                              else if(Quizing){
- 514   4                                      QzFn = 1;
- 515   4                                      if(RxBuf[1]>=0x40 && RxBuf[1]<=0x6f){
- 516   5                                              Ans[RxBuf[1]-0x41] = 'a';       
- 517   5                                              LcdWriteCom(0x01);  //清屏  
- 518   5                                              while(1);
- 519   5                                      }
- 520   4                                      else if(RxBuf[1]>=0x70 && RxBuf[1]<=0x9f){
- 521   5                                              Ans[RxBuf[1]-0x71] = 'b';
- 522   5                                      }
- 523   4                                      else if(RxBuf[1]>=0xa0 && RxBuf[1]<=0xcf){
- 524   5                                              Ans[RxBuf[1]-0xa1] = 'c';
- 525   5                                      }
- 526   4                                      else if(RxBuf[1]>=0xd0 && RxBuf[1]<=0xff){
- 527   5                                              Ans[RxBuf[1]-0xd1] = 'd';
- 528   5                                      } 
- 529   4                                      for(i = 0;i<NUM;i++){
- 530   5                                              if(Ans[i] == 0)
- 531   5                                                      QzFn = 0;       
- 532   5                                      }
- 533   4                                      if(QzFn){
- 534   5                                              Quizing = 0;
- 535   5                                      }       
- 536   4                              }
- 537   3                              Delay(1000);
- 538   3                      }
- 539   2                      RxBuf[1] = 0x00;
- 540   2              }
-C51 COMPILER V9.00   QUEEN                                                                 11/18/2014 22:46:54 PAGE 10  
-
- 541   1      }
+ 479   4                                      else if(RxBuf[1]>=0x70 && RxBuf[1]<=0x9f){
+ 480   5                                              Ans[RxBuf[1]-0x71] = 'b';
+ 481   5                                      }
+ 482   4                                      else if(RxBuf[1]>=0xa0 && RxBuf[1]<=0xcf){
+ 483   5                                              Ans[RxBuf[1]-0xa1] = 'c';
+ 484   5                                      }
+ 485   4                                      else if(RxBuf[1]>=0xd0 && RxBuf[1]<=0xff){
+ 486   5                                              Ans[RxBuf[1]-0xd1] = 'd';
+ 487   5                                      } 
+ 488   4                                      for(i = 0;i<NUM;i++){
+ 489   5                                              if(Ans[i] == 0)
+ 490   5                                                      QzFn = 0;       
+ 491   5                                      }
+ 492   4                                      if(QzFn){
+ 493   5                                              Quizing = 0; 
+ 494   5                                              P0 = 0xBF;
+ 495   5                                      }
+ 496   4                                              
+ 497   4                              }
+ 498   3                              Delay(1000);
+ 499   3                      }
+ 500   2                      if(QzFn && !RxBuf[1]){
+ 501   3                              QzFn = 0;
+ 502   3                      }
+ 503   2                      RxBuf[1] = 0x00;
+ 504   2              }
+ 505   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1409    ----
+   CODE SIZE        =   1076    ----
    CONSTANT SIZE    =     57    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =     60      83

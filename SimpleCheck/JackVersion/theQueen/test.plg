@@ -3,7 +3,7 @@
 <pre>
 <h1>µVision Build Log</h1>
 <h2>Project:</h2>
-D:\GithubFiles\HoneyComb\theQueen\test.uvproj
+D:\GithubFiles\HoneyComb\SimpleCheck\JackVersion\theQueen\test.uvproj
 Project File Date:  11/17/2014
 
 <h2>Output:</h2>
@@ -11,95 +11,119 @@ Build target 'Target 1'
 compiling Queen.c...
 linking...
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCDWRITEDATA?QUEEN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?LCDINIT?QUEEN
-Program Size: data=10.0 xdata=135 code=2140
+Program Size: data=10.0 xdata=135 code=1648
 creating hex file from "test"...
-"test" - 0 Error(s), 1 Warning(s).
+"test" - 0 Error(s), 2 Warning(s).
 Build target 'Target 1'
 compiling Queen.c...
 linking...
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCDWRITEDATA?QUEEN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?LCDINIT?QUEEN
-Program Size: data=10.0 xdata=135 code=2140
+Program Size: data=10.0 xdata=135 code=1648
 creating hex file from "test"...
-"test" - 0 Error(s), 1 Warning(s).
+"test" - 0 Error(s), 2 Warning(s).
 Build target 'Target 1'
 compiling Queen.c...
 linking...
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCDWRITEDATA?QUEEN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?LCDINIT?QUEEN
-Program Size: data=10.0 xdata=135 code=2140
+Program Size: data=10.0 xdata=135 code=1648
 creating hex file from "test"...
-"test" - 0 Error(s), 1 Warning(s).
+"test" - 0 Error(s), 2 Warning(s).
 Build target 'Target 1'
 compiling Queen.c...
 linking...
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCDWRITEDATA?QUEEN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?LCDINIT?QUEEN
-Program Size: data=10.0 xdata=135 code=2052
+Program Size: data=10.0 xdata=135 code=1648
 creating hex file from "test"...
-"test" - 0 Error(s), 1 Warning(s).
+"test" - 0 Error(s), 2 Warning(s).
 Build target 'Target 1'
 compiling Queen.c...
 linking...
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCDWRITEDATA?QUEEN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?LCDINIT?QUEEN
-Program Size: data=10.0 xdata=135 code=2052
+Program Size: data=10.0 xdata=135 code=1648
 creating hex file from "test"...
-"test" - 0 Error(s), 1 Warning(s).
+"test" - 0 Error(s), 2 Warning(s).
 Build target 'Target 1'
 compiling Queen.c...
 linking...
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCDWRITEDATA?QUEEN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?LCDINIT?QUEEN
-Program Size: data=10.0 xdata=135 code=2144
+Program Size: data=10.0 xdata=135 code=1633
 creating hex file from "test"...
-"test" - 0 Error(s), 1 Warning(s).
+"test" - 0 Error(s), 2 Warning(s).
 Build target 'Target 1'
 compiling Queen.c...
 linking...
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCDWRITEDATA?QUEEN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?LCDINIT?QUEEN
-Program Size: data=10.0 xdata=135 code=2153
+Program Size: data=10.0 xdata=135 code=1633
 creating hex file from "test"...
-"test" - 0 Error(s), 1 Warning(s).
+"test" - 0 Error(s), 2 Warning(s).
 Build target 'Target 1'
 compiling Queen.c...
 linking...
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCDWRITEDATA?QUEEN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?LCDINIT?QUEEN
-Program Size: data=10.0 xdata=135 code=2065
+Program Size: data=10.0 xdata=135 code=1633
 creating hex file from "test"...
-"test" - 0 Error(s), 1 Warning(s).
+"test" - 0 Error(s), 2 Warning(s).
 Build target 'Target 1'
 compiling Queen.c...
 linking...
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCDWRITEDATA?QUEEN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?LCDINIT?QUEEN
-Program Size: data=10.0 xdata=135 code=2070
+Program Size: data=10.0 xdata=135 code=1652
 creating hex file from "test"...
-"test" - 0 Error(s), 1 Warning(s).
+"test" - 0 Error(s), 2 Warning(s).
 Build target 'Target 1'
 compiling Queen.c...
 linking...
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCDWRITEDATA?QUEEN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?LCDINIT?QUEEN
-Program Size: data=10.0 xdata=135 code=2070
+Program Size: data=10.0 xdata=135 code=1652
 creating hex file from "test"...
-"test" - 0 Error(s), 1 Warning(s).
+"test" - 0 Error(s), 2 Warning(s).
 Build target 'Target 1'
 compiling Queen.c...
 linking...
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCDWRITEDATA?QUEEN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?LCDINIT?QUEEN
-Program Size: data=10.0 xdata=135 code=2070
+Program Size: data=10.0 xdata=135 code=1652
 creating hex file from "test"...
-"test" - 0 Error(s), 1 Warning(s).
+"test" - 0 Error(s), 2 Warning(s).
 Build target 'Target 1'
 compiling Queen.c...
 linking...
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCDWRITEDATA?QUEEN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?LCDINIT?QUEEN
-Program Size: data=10.0 xdata=135 code=2070
+Program Size: data=10.0 xdata=135 code=1652
 creating hex file from "test"...
-"test" - 0 Error(s), 1 Warning(s).
+"test" - 0 Error(s), 2 Warning(s).

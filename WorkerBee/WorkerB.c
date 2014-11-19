@@ -318,32 +318,3 @@ void main(void)
 		RxBuf[1] = 0x00;
 	}
 }
-/*
-		if(KEY1 ==0 ){
-			P0=seg[1];
-		    TxBuf[1] = 0x86 ;
-		    tf = 1 ; 
-	    }
-	    if(KEY2 ==0 ){
-			P0=seg[2];
-			TxBuf[2] =1 ;
-			tf = 1 ; 
-	    }
-	    if (tf==1){	
-			nRF24L01_TxPacket(TxBuf);	
-			TxBuf[1] = 0x00;
-			TxBuf[2] = 0x00;
-			tf=0;
-			Delay(1000);
-	    }
-		SetRX_Mode();
-		nRF24L01_RxPacket(RxBuf);
-   		if(RxBuf[1]){					
-			if(	RxBuf[1]==0x86){	 	
-				P0=seg[3];
-			}
-			Delay(1000);
-		}
-		RxBuf[1] = 0x00;
-		RxBuf[2] = 0x00;
-*/

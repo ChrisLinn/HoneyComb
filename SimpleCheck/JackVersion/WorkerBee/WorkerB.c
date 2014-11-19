@@ -1,49 +1,8 @@
 #include <reg52.h>
-#include <intrins.h>	
+#include <intrins.h> 
 #include<stdio.h>
 #include<string.h>
-
-//*********************************************************************************************************************************************
-#ifndef __LCD_H_
-#define __LCD_H_
-/**********************************
-当使用的是4位数据传输的时候定义，
-使用8位取消这个定义
-**********************************/
-#define LCD1602_4PINS
-/**********************************
-包含头文件
-**********************************/
-//#include<reg51.h>
-//---重定义关键词---//
-//#ifndef uchar
-//#define uchar unsigned char
-//#endif
-//
-//#ifndef uint 
-//#define uint unsigned int
-//#endif
-/**********************************
-PIN口定义
-**********************************/
-#define LCD1602_DATAPINS P0
-sbit LCD1602_E=P2^7;
-sbit LCD1602_RW=P2^5;
-sbit LCD1602_RS=P2^6;
-///**********************************
-//函数声明
-//**********************************/
-///*在51单片机12MHZ时钟下的延时函数*/
-//void Lcd1602_Delay1ms(uint c);   //误差 0us
-///*LCD1602写入8位命令子函数*/
-//void LcdWriteCom(uchar com);
-///*LCD1602写入8位数据子函数*/	
-//void LcdWriteData(uchar dat)	;
-///*LCD1602初始化子程序*/		
-//void LcdInit();						  
-#endif
-//*********************************************************************************************************************************************
-
+						 	
 typedef unsigned char uchar;
 typedef unsigned char uint;
 unsigned char TxBuf[20]={0};
@@ -58,6 +17,7 @@ sbit	IRQ		=P3^3;
 //************************************按键***************************************************
 sbit	KEY1=P3^6;
 sbit	KEY2=P3^7;
+sbit	KEY3=P3^5;
 //************************************数码管位选*********************************************
 sbit	led3=P2^0;
 sbit	led2=P2^1;
@@ -109,7 +69,7 @@ uint const RX_ADDRESS[RX_ADR_WIDTH]= {0x34,0x43,0x10,0x10,0x01};	//接收地址
 #define RX_PW_P5        0x16  // 接收频道0接收数据长度
 #define FIFO_STATUS     0x17  // FIFO栈入栈出状态寄存器设置
 
-#define NUM	1
+#define NO 1
 //**************************************************************************************
 void Delay(unsigned int s);
 void inerDelay_us(unsigned char n);
@@ -279,260 +239,54 @@ void nRF24L01_TxPacket(unsigned char * tx_buf)
 	CE=1;		 //置高CE，激发数据发送
 	inerDelay_us(10);
 }
-//*********************************************************************************************************************************************
-//LCD START
-//*********************************************************************************************************************************************
-/*******************************************************************************
-* 函 数 名         : Lcd1602_Delay1ms
-* 函数功能		   : 延时函数，延时1ms
-* 输    入         : c
-* 输    出         : 无
-* 说    名         : 该函数是在12MHZ晶振下，12分频单片机的延时。
-*******************************************************************************/
-
-void Lcd1602_Delay1ms(uint c)   //误差 0us
-{
-    uchar a,b;
-	for (; c>0; c--)
-	{
-		 for (b=199;b>0;b--)
-		 {
-		  	for(a=1;a>0;a--);
-		 }      
-	}
-    	
-}
-
-/*******************************************************************************
-* 函 数 名         : LcdWriteCom
-* 函数功能		   : 向LCD写入一个字节的命令
-* 输    入         : com
-* 输    出         : 无
-*******************************************************************************/
-#ifndef 	LCD1602_4PINS	 //当没有定义这个LCD1602_4PINS时
-void LcdWriteCom(uchar com)	  //写入命令
-{
-	LCD1602_E = 0;     //使能
-	LCD1602_RS = 0;	   //选择发送命令
-	LCD1602_RW = 0;	   //选择写入
-	
-	LCD1602_DATAPINS = com;     //放入命令
-	Lcd1602_Delay1ms(1);		//等待数据稳定
-
-	LCD1602_E = 1;	          //写入时序
-	Lcd1602_Delay1ms(5);	  //保持时间
-	LCD1602_E = 0;
-}
-#else 
-void LcdWriteCom(uchar com)	  //写入命令
-{
-	LCD1602_E = 0;	 //使能清零
-	LCD1602_RS = 0;	 //选择写入命令
-	LCD1602_RW = 0;	 //选择写入
-
-	LCD1602_DATAPINS = com;	//由于4位的接线是接到P0口的高四位，所以传送高四位不用改
-	Lcd1602_Delay1ms(1);
-
-	LCD1602_E = 1;	 //写入时序
-	Lcd1602_Delay1ms(5);
-	LCD1602_E = 0;
-
-//	Lcd1602_Delay1ms(1);
-	LCD1602_DATAPINS = com << 4; //发送低四位
-	Lcd1602_Delay1ms(1);
-
-	LCD1602_E = 1;	 //写入时序
-	Lcd1602_Delay1ms(5);
-	LCD1602_E = 0;
-}
-#endif
-/*******************************************************************************
-* 函 数 名         : LcdWriteData
-* 函数功能		   : 向LCD写入一个字节的数据
-* 输    入         : dat
-* 输    出         : 无
-*******************************************************************************/		   
-#ifndef 	LCD1602_4PINS		   
-void LcdWriteData(uchar dat)			//写入数据
-{
-	LCD1602_E = 0;	//使能清零
-	LCD1602_RS = 1;	//选择输入数据
-	LCD1602_RW = 0;	//选择写入
-
-	LCD1602_DATAPINS = dat; //写入数据
-	Lcd1602_Delay1ms(1);
-
-	LCD1602_E = 1;   //写入时序
-	Lcd1602_Delay1ms(5);   //保持时间
-	LCD1602_E = 0;
-}
-#else
-void LcdWriteData(uchar dat)			//写入数据
-{
-	LCD1602_E = 0;	  //使能清零
-	LCD1602_RS = 1;	  //选择写入数据
-	LCD1602_RW = 0;	  //选择写入
-
-	LCD1602_DATAPINS = dat;	//由于4位的接线是接到P0口的高四位，所以传送高四位不用改
-	Lcd1602_Delay1ms(1);
-
-	LCD1602_E = 1;	  //写入时序
-	Lcd1602_Delay1ms(5);
-	LCD1602_E = 0;
-
-	LCD1602_DATAPINS = dat << 4; //写入低四位
-	Lcd1602_Delay1ms(1);
-
-	LCD1602_E = 1;	  //写入时序
-	Lcd1602_Delay1ms(5);
-	LCD1602_E = 0;
-}
-#endif
-/*******************************************************************************
-* 函 数 名       : LcdInit()
-* 函数功能		 : 初始化LCD屏
-* 输    入       : 无
-* 输    出       : 无
-*******************************************************************************/		   
-#ifndef		LCD1602_4PINS
-void LcdInit()						  //LCD初始化子程序
-{
- 	LcdWriteCom(0x38);  //开显示
-	LcdWriteCom(0x0c);  //开显示不显示光标
-	LcdWriteCom(0x06);  //写一个指针加1
-	LcdWriteCom(0x01);  //清屏
-	LcdWriteCom(0x80);  //设置数据指针起点
-}
-#else
-void LcdInit()						  //LCD初始化子程序
-{
-	LcdWriteCom(0x32);	 //将8位总线转为4位总线
-	LcdWriteCom(0x28);	 //在四位线下的初始化
-	LcdWriteCom(0x0c);  //开显示不显示光标
-	LcdWriteCom(0x06);  //写一个指针加1
-	LcdWriteCom(0x01);  //清屏
-	LcdWriteCom(0x80);  //设置数据指针起点
-}
-#endif
-//*********************************************************************************************************************************************
-//LCD END
-//*********************************************************************************************************************************************
-
-
 //************************************主函数************************************************************
 void main(void)
 {
-	int Asking,Quizing,QzFn,i;
+	int Asking,Quizing;
 	unsigned char tf =0;
-	char Ans[NUM];
-	unsigned char AskSt[9]="Ask Start";
-	unsigned char AskStu[17]="Student No.XX Ask";
-	unsigned char AskFnsh[10]="Ask Finish";
-	unsigned char QzSt[10]="Quiz Start";
-	unsigned char QzFnsh[11]="Quiz Finish";
-							   
-	Asking = Quizing = QzFn = 0;
-
-	LcdWriteCom(0x32);	 //将8位总线转为4位总线
-	LcdWriteCom(0x28);	 //在四位线下的初始化
-	LcdWriteCom(0x0c);  //开显示不显示光标
-	LcdWriteCom(0x06);  //写一个指针加1
-	LcdWriteCom(0x01);  //清屏
-	LcdWriteCom(0x80);  //设置数据指针起点
-
+	Asking = Quizing =0;
     init_NRF24L01() ;
 	led0=0;led1=0;led2=0;led3=0;
-	while(1)
-	{
-		if(KEY1 == 0 && Asking){
-			Asking = 0;
-			LcdWriteCom(0x01);  //清屏
-			LcdWriteCom(0x80);  //设置数据指针起点	
-			for(i=0;i<3;i++)
-			{
-				LcdWriteData(AskFnsh[i]);	
-			}
-			LcdWriteCom(0xC0); 
-			for(i=4;i<10;i++)
-			{
-				LcdWriteData(AskFnsh[i]);	
-			}
-		    TxBuf[1] = 0x02;
-		    tf = 1 ; 
-	    }
-	    if(KEY2==0 && !Quizing && !Asking){ 
-			Quizing = 1;
-			for(i = 0;i<NUM;i++)
-				Ans[i] = 0;
-			LcdWriteCom(0x01);  //清屏
-			LcdWriteCom(0x80);  //设置数据指针起点	
-			for(i=0;i<4;i++)
-			{
-				LcdWriteData(QzSt[i]);	
-			}
-			LcdWriteCom(0xC0); 
-			for(i=5;i<10;i++)
-			{
-				LcdWriteData(QzSt[i]);	
-			}
+	P0 = 0xBF;
+	while(1){
+		if(KEY1 == 0){
+		    TxBuf[1] = 0x10+NO;
+			Asking = 1;
+			P0 = seg[1];
+		    tf = 1; 	
 	    }
 		if(Quizing){
-		    TxBuf[1] = 0x03;
-			tf = 1 ; 
-		}
-		if(QzFn){
-		    TxBuf[1] = 0x04;
-			QzFn = 0;
-			tf = 1 ; 
-		}
+		    if(KEY2 == 0 ){
+			    TxBuf[1] = 0x40+NO ;
+				tf = 1 ;	 	
+//				P0 = 0xBF; 
+		    }
+		    if(KEY3 == 0 ){
+			    TxBuf[1] = 0x70+NO ;
+				tf = 1 ; 	
+//				P0 = 0xBF; 
+		    }
+		} 	
 	    if (tf==1){	
 			nRF24L01_TxPacket(TxBuf);	
 			TxBuf[1] = 0x00;
-			tf = 0;
+			tf=0;
 			Delay(1000);
 	    }
 		SetRX_Mode();
 		nRF24L01_RxPacket(RxBuf);
    		if(RxBuf[1]){					
-			if(RxBuf[1]>=0x10 && RxBuf[1]<=0x3f){
-				Asking = 1;	 	
-				AskStu[11] = (RxBuf[1]-0x10)/10+'0';
-				AskStu[12] = (RxBuf[1]-0x10)%10+'0';
-				LcdWriteCom(0x01);  //清屏
-				LcdWriteCom(0x80);  //设置数据指针起点	
-				for(i=14;i<17;i++)
-				{
-					LcdWriteData(AskStu[i]);	
-				}
-				LcdWriteCom(0xC0); 
-				for(i=0;i<13;i++)
-				{
-					LcdWriteData(AskStu[i]);	
-				}
-			}	
-			else if(Quizing){
-				QzFn = 1;
-				if(RxBuf[1]>=0x40 && RxBuf[1]<=0x6f){
-					Ans[RxBuf[1]-0x41] = 'a';	
-					LcdWriteCom(0x01);  //清屏  
-					while(1) ;
-				}
-				else if(RxBuf[1]>=0x70 && RxBuf[1]<=0x9f){
-					Ans[RxBuf[1]-0x71] = 'b';
-				}
-				else if(RxBuf[1]>=0xa0 && RxBuf[1]<=0xcf){
-					Ans[RxBuf[1]-0xa1] = 'c';
-				}
-				else if(RxBuf[1]>=0xd0 && RxBuf[1]<=0xff){
-					Ans[RxBuf[1]-0xd1] = 'd';
-				} 
-				for(i = 0;i<NUM;i++){
-					if(Ans[i] == 0)
-						QzFn = 0;	
-				}
-				if(QzFn){
-					Quizing = 0;
-				}	
+			if(RxBuf[1]==0x02){
+				Asking = 0;	 						 	
+				P0=0xBF;
+			}			
+			if(RxBuf[1]==0x03){
+				Quizing = 1;	 	
+				P0 = seg[2];
+			}
+			if(RxBuf[1]==0x04){
+				Quizing = 0;	 	
+				P0 = 0xBF;
 			}
 			Delay(1000);
 		}

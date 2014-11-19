@@ -359,10 +359,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>12</ColumnNumber>
+      <ColumnNumber>60</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>273</TopLine>
-      <CurrentLine>273</CurrentLine>
+      <TopLine>268</TopLine>
+      <CurrentLine>286</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\WorkerB.c</PathWithFileName>
       <FilenameWithoutPath>WorkerB.c</FilenameWithoutPath>
@@ -1439,9 +1439,9 @@
       <Documents>
         <Doc>
           <Name>.\WorkerB.c</Name>
-          <ColumnNumber>12</ColumnNumber>
-          <TopLine>273</TopLine>
-          <CurrentLine>273</CurrentLine>
+          <ColumnNumber>60</ColumnNumber>
+          <TopLine>268</TopLine>
+          <CurrentLine>286</CurrentLine>
         </Doc>
       </Documents>
     </MDIGroup>
