@@ -177,10 +177,10 @@
       <FileType>1</FileType>
       <tvExp>1</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>14</ColumnNumber>
+      <ColumnNumber>17</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>459</TopLine>
-      <CurrentLine>459</CurrentLine>
+      <TopLine>6</TopLine>
+      <CurrentLine>6</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Queen.c</PathWithFileName>
       <FilenameWithoutPath>Queen.c</FilenameWithoutPath>
@@ -1257,9 +1257,9 @@
       <Documents>
         <Doc>
           <Name>.\Queen.c</Name>
-          <ColumnNumber>14</ColumnNumber>
-          <TopLine>459</TopLine>
-          <CurrentLine>459</CurrentLine>
+          <ColumnNumber>17</ColumnNumber>
+          <TopLine>6</TopLine>
+          <CurrentLine>6</CurrentLine>
         </Doc>
       </Documents>
     </MDIGroup>

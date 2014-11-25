@@ -1,51 +1,8 @@
+//不知道怎么样测试一下
 #include <reg52.h>
-#include <intrins.h>	
-#include<stdio.h>
-#include<string.h>
-
-//*********************************************************************************************************************************************
-#ifndef __LCD_H_
-#define __LCD_H_
-/**********************************
-当使用的是4位数据传输的时候定义，
-使用8位取消这个定义
-**********************************/
-#define LCD1602_4PINS
-/**********************************
-包含头文件
-**********************************/
-//#include<reg51.h>
-//---重定义关键词---//
-//#ifndef uchar
-//#define uchar unsigned char
-//#endif
-//
-//#ifndef uint 
-//#define uint unsigned int
-//#endif
-/**********************************
-PIN口定义
-**********************************/
-#define LCD1602_DATAPINS P0
-sbit LCD1602_E=P2^7;
-sbit LCD1602_RW=P2^5;
-sbit LCD1602_RS=P2^6;
-///**********************************
-//函数声明
-//**********************************/
-///*在51单片机12MHZ时钟下的延时函数*/
-//void Lcd1602_Delay1ms(uint c);   //误差 0us
-///*LCD1602写入8位命令子函数*/
-//void LcdWriteCom(uchar com);
-///*LCD1602写入8位数据子函数*/	
-//void LcdWriteData(uchar dat)	;
-///*LCD1602初始化子程序*/		
-//void LcdInit();						  
-#endif
-//*********************************************************************************************************************************************
-
+#include <intrins.h>
 typedef unsigned char uchar;
-typedef unsigned char uint;
+typedef unsigned char uint;	
 unsigned char TxBuf[20]={0};
 unsigned char RxBuf[20]={0};
 //****************************************NRF24L01端口定义***************************************
@@ -108,9 +65,60 @@ uint const RX_ADDRESS[RX_ADR_WIDTH]= {0x34,0x43,0x10,0x10,0x01};	//接收地址
 #define RX_PW_P4        0x15  // 接收频道0接收数据长度
 #define RX_PW_P5        0x16  // 接收频道0接收数据长度
 #define FIFO_STATUS     0x17  // FIFO栈入栈出状态寄存器设置
-
-#define NUM	1
 //**************************************************************************************
+#define NUM 1
+//*************************************************************************************************************************************************************
+//LCD_Definitions
+//*************************************************************************************************************************************************************
+#ifndef __LCD_H_
+#define __LCD_H_
+/**********************************
+当使用的是4位数据传输的时候定义，
+使用8位取消这个定义
+**********************************/
+#define LCD1602_4PINS
+
+/**********************************
+包含头文件
+**********************************/
+//#include<reg51.h>
+
+//---重定义关键词---//
+//#ifndef uchar
+//#define uchar unsigned char
+//#endif
+//
+//#ifndef uint 
+//#define uint unsigned int
+//#endif
+
+/**********************************
+PIN口定义
+**********************************/
+#define LCD1602_DATAPINS P0
+sbit LCD1602_E=P2^7;
+sbit LCD1602_RW=P2^5;
+sbit LCD1602_RS=P2^6;
+
+/**********************************
+函数声明
+**********************************/
+/*在51单片机12MHZ时钟下的延时函数*/
+void Lcd1602_Delay1ms(uint c);   //误差 0us
+/*LCD1602写入8位命令子函数*/
+void LcdWriteCom(uchar com);
+/*LCD1602写入8位数据子函数*/	
+void LcdWriteData(uchar dat)	;
+/*LCD1602初始化子程序*/		
+void LcdInit();						  
+#endif
+//*************************************************************************************************************************************************************
+
+
+
+
+
+
 void Delay(unsigned int s);
 void inerDelay_us(unsigned char n);
 void init_NRF24L01(void);
@@ -279,9 +287,9 @@ void nRF24L01_TxPacket(unsigned char * tx_buf)
 	CE=1;		 //置高CE，激发数据发送
 	inerDelay_us(10);
 }
-//*********************************************************************************************************************************************
-//LCD START
-//*********************************************************************************************************************************************
+//*************************************************************************************************************************************************************
+//LCD_Functions
+//*************************************************************************************************************************************************************
 /*******************************************************************************
 * 函 数 名         : Lcd1602_Delay1ms
 * 函数功能		   : 延时函数，延时1ms
@@ -414,11 +422,6 @@ void LcdInit()						  //LCD初始化子程序
 	LcdWriteCom(0x80);  //设置数据指针起点
 }
 #endif
-//*********************************************************************************************************************************************
-//LCD END
-//*********************************************************************************************************************************************
-
-
 //************************************主函数************************************************************
 void main(void)
 {
@@ -433,58 +436,50 @@ void main(void)
 							   
 	Asking = Quizing = QzFn = 0;
 
+    init_NRF24L01() ;
 	LcdWriteCom(0x32);	 //将8位总线转为4位总线
 	LcdWriteCom(0x28);	 //在四位线下的初始化
 	LcdWriteCom(0x0c);  //开显示不显示光标
 	LcdWriteCom(0x06);  //写一个指针加1
-	LcdWriteCom(0x01);  //清屏
-	LcdWriteCom(0x80);  //设置数据指针起点
-
-    init_NRF24L01() ;
-	led0=0;led1=0;led2=0;led3=0;
+	//P0 = 0xBF;
 	while(1)
 	{
 		if(KEY1 == 0 && Asking){
-			Asking = 0;
+			Asking = 0;	 
+			//P0 = 0xBF;
 			LcdWriteCom(0x01);  //清屏
-			LcdWriteCom(0x80);  //设置数据指针起点	
-			for(i=0;i<3;i++)
-			{
-				LcdWriteData(AskFnsh[i]);	
-			}
-			LcdWriteCom(0xC0); 
+			LcdWriteCom(0x80);  //设置数据指针起点
+			for(i=0;i<4;i++)
+				LcdWriteData(AskFnsh[i]);	   
+			LcdWriteCom(0xC0); //设置坐标在第二行  
 			for(i=4;i<10;i++)
-			{
-				LcdWriteData(AskFnsh[i]);	
-			}
+				LcdWriteData(AskFnsh[i]);	   
 		    TxBuf[1] = 0x02;
-		    tf = 1 ; 
+		    tf = 1; 
 	    }
 	    if(KEY2==0 && !Quizing && !Asking){ 
 			Quizing = 1;
 			for(i = 0;i<NUM;i++)
 				Ans[i] = 0;
+			//P0 = seg[2];
 			LcdWriteCom(0x01);  //清屏
-			LcdWriteCom(0x80);  //设置数据指针起点	
-			for(i=0;i<4;i++)
-			{
-				LcdWriteData(QzSt[i]);	
-			}
-			LcdWriteCom(0xC0); 
+			LcdWriteCom(0x80);  //设置数据指针起点
+			for(i=0;i<5;i++)
+				LcdWriteData(QzSt[i]);	   
+			LcdWriteCom(0xC0); //设置坐标在第二行  
 			for(i=5;i<10;i++)
-			{
-				LcdWriteData(QzSt[i]);	
-			}
+				LcdWriteData(QzSt[i]);
+			TxBuf[1] = 0x03;
+			tf = 1 ;
 	    }
-		if(Quizing){
-		    TxBuf[1] = 0x03;
-			tf = 1 ; 
-		}
-		if(QzFn){
-		    TxBuf[1] = 0x04;
-			QzFn = 0;
-			tf = 1 ; 
-		}
+//		if(Quizing){
+//		    TxBuf[1] = 0x03;
+//			tf = 1 ; 
+//		}
+//		if(QzFn){
+//		    TxBuf[1] = 0x04;
+//			tf = 1 ; 
+//		}
 	    if (tf==1){	
 			nRF24L01_TxPacket(TxBuf);	
 			TxBuf[1] = 0x00;
@@ -495,35 +490,32 @@ void main(void)
 		nRF24L01_RxPacket(RxBuf);
    		if(RxBuf[1]){					
 			if(RxBuf[1]>=0x10 && RxBuf[1]<=0x3f){
-				Asking = 1;	 	
-				AskStu[11] = (RxBuf[1]-0x10)/10+'0';
-				AskStu[12] = (RxBuf[1]-0x10)%10+'0';
+				Asking = 1;		   	
+				//P0 = seg[RxBuf[1]-0x10+1];
+				AskStu[11]=(RxBuf[1]-0x10+1)/10+'0';
+				AskStu[12]=(RxBuf[1]-0x10+1)%10+'0'; 
 				LcdWriteCom(0x01);  //清屏
-				LcdWriteCom(0x80);  //设置数据指针起点	
+				LcdWriteCom(0x80);  //设置数据指针起点
 				for(i=14;i<17;i++)
-				{
-					LcdWriteData(AskStu[i]);	
-				}
-				LcdWriteCom(0xC0); 
-				for(i=0;i<13;i++)
-				{
-					LcdWriteData(AskStu[i]);	
-				}
+					LcdWriteData(AskStu[i]);	   
+				LcdWriteCom(0xC0); //设置坐标在第二行  
+				for(i=0;i<14;i++)
+					LcdWriteData(AskStu[i]);
 			}	
-			else if(Quizing){
+			if(Quizing){
 				QzFn = 1;
 				if(RxBuf[1]>=0x40 && RxBuf[1]<=0x6f){
-					Ans[RxBuf[1]-0x41] = 'a';	
-					LcdWriteCom(0x01);  //清屏  
-					while(1) ;
+				//if(RxBuf[1]==0x06){
+					Ans[RxBuf[1]-0x40] = 'a';
+					//Ans[0] = 'a';   		
 				}
-				else if(RxBuf[1]>=0x70 && RxBuf[1]<=0x9f){
-					Ans[RxBuf[1]-0x71] = 'b';
+				if(RxBuf[1]>=0x70 && RxBuf[1]<=0x9f){
+					Ans[RxBuf[1]-0x70] = 'b';
 				}
-				else if(RxBuf[1]>=0xa0 && RxBuf[1]<=0xcf){
+				if(RxBuf[1]>=0xa0 && RxBuf[1]<=0xcf){
 					Ans[RxBuf[1]-0xa1] = 'c';
 				}
-				else if(RxBuf[1]>=0xd0 && RxBuf[1]<=0xff){
+				if(RxBuf[1]>=0xd0 && RxBuf[1]<=0xff){
 					Ans[RxBuf[1]-0xd1] = 'd';
 				} 
 				for(i = 0;i<NUM;i++){
@@ -531,11 +523,26 @@ void main(void)
 						QzFn = 0;	
 				}
 				if(QzFn){
-					Quizing = 0;
+//					LcdWriteCom(0x01);  //清屏
+//					LcdWriteCom(0x80);  //设置数据指针起点
+//					LcdWriteData('1');
+//					while(1);
+					Quizing = 0; 
+					//P0 = 0xBF;   
+					LcdWriteCom(0x01);  //清屏
+					LcdWriteCom(0x80);  //设置数据指针起点
+					for(i=0;i<5;i++)
+						LcdWriteData(QzFnsh[i]);	   
+					LcdWriteCom(0xC0); //设置坐标在第二行  
+					for(i=5;i<11;i++)
+						LcdWriteData(QzFnsh[i]);
 				}	
 			}
 			Delay(1000);
 		}
+//		if(QzFn && !RxBuf[1]){
+//			QzFn = 0;
+//		}
 		RxBuf[1] = 0x00;
 	}
 }

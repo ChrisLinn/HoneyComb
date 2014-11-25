@@ -1,0 +1,17 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+D:\GithubFiles\HoneyComb\VersionControl\Ask重见天日\theQueen\test.uvproj
+Project File Date:  11/17/2014
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling Queen.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LCDINIT?QUEEN
+Program Size: data=10.0 xdata=135 code=1912
+creating hex file from "test"...
+"test" - 0 Error(s), 1 Warning(s).
