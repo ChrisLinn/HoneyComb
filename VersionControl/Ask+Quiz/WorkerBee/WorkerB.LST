@@ -1,4 +1,4 @@
-C51 COMPILER V9.00   WORKERB                                                               11/20/2014 17:09:37 PAGE 1   
+C51 COMPILER V9.00   WORKERB                                                               11/26/2014 15:15:48 PAGE 1   
 
 
 C51 COMPILER V9.00, COMPILATION OF MODULE WORKERB
@@ -62,7 +62,7 @@ line level    source
   51          #define SETUP_RETR      0x04  // 自动重发功能设置
   52          #define RF_CH           0x05  // 工作频率设置
   53          #define RF_SETUP        0x06  // 发射速率、功耗功能设置
-C51 COMPILER V9.00   WORKERB                                                               11/20/2014 17:09:37 PAGE 2   
+C51 COMPILER V9.00   WORKERB                                                               11/26/2014 15:15:48 PAGE 2   
 
   54          #define STATUS          0x07  // 状态寄存器
   55          #define OBSERVE_TX      0x08  // 发送监测功能
@@ -126,7 +126,7 @@ line level    source
  113   1              SCK=0;   // 
  114   1              SPI_Write_Buf(WRITE_REG + TX_ADDR, TX_ADDRESS, TX_ADR_WIDTH);    // 写本地地址  
  115   1              SPI_Write_Buf(WRITE_REG + RX_ADDR_P0, RX_ADDRESS, RX_ADR_WIDTH); // 写接收端地址
-C51 COMPILER V9.00   WORKERB                                                               11/20/2014 17:09:37 PAGE 3   
+C51 COMPILER V9.00   WORKERB                                                               11/26/2014 15:15:48 PAGE 3   
 
  116   1              SPI_RW_Reg(WRITE_REG + EN_AA, 0x01);      //  频道0自动 ACK应答允许     
  117   1              SPI_RW_Reg(WRITE_REG + EN_RXADDR, 0x01);  //  允许接收地址只有频道0，如果需要多频道可以参考Page21  
@@ -190,7 +190,7 @@ line level    source
  175   1              
  176   1              CSN = 0;                                // Set CSN low, init SPI tranaction
  177   1              status = SPI_RW(reg);                   // Select register to write to and read status uchar
-C51 COMPILER V9.00   WORKERB                                                               11/20/2014 17:09:37 PAGE 4   
+C51 COMPILER V9.00   WORKERB                                                               11/26/2014 15:15:48 PAGE 4   
 
  178   1              
  179   1              for(uchar_ctr=0;uchar_ctr<uchars;uchar_ctr++)
@@ -254,7 +254,7 @@ line level    source
  234          {
  235   1              CE=0;                   //StandBy I模式 
  236   1              SPI_Write_Buf(WRITE_REG + RX_ADDR_P0, TX_ADDRESS, TX_ADR_WIDTH); // 装载接收端地址
-C51 COMPILER V9.00   WORKERB                                                               11/20/2014 17:09:37 PAGE 5   
+C51 COMPILER V9.00   WORKERB                                                               11/26/2014 15:15:48 PAGE 5   
 
  237   1              SPI_Write_Buf(WR_TX_PLOAD, tx_buf, TX_PLOAD_WIDTH);                      // 装载数据    
  238   1              SPI_RW_Reg(WRITE_REG + CONFIG, 0x0e);                    // IRQ收发完成中断响应，16位CRC，主发送
@@ -318,7 +318,7 @@ line level    source
  296   2                      RxBuf[1] = 0x00;
  297   2              }
  298   1      }
-C51 COMPILER V9.00   WORKERB                                                               11/20/2014 17:09:37 PAGE 6   
+C51 COMPILER V9.00   WORKERB                                                               11/26/2014 15:15:48 PAGE 6   
 
 
 
