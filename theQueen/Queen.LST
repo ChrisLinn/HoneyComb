@@ -1,4 +1,4 @@
-C51 COMPILER V9.00   QUEEN                                                                 11/19/2014 22:33:15 PAGE 1   
+C51 COMPILER V9.00   QUEEN                                                                 12/01/2014 20:23:18 PAGE 1   
 
 
 C51 COMPILER V9.00, COMPILATION OF MODULE QUEEN
@@ -62,7 +62,7 @@ line level    source
   51          #define STATUS          0x07  // 状态寄存器
   52          #define OBSERVE_TX      0x08  // 发送监测功能
   53          #define CD              0x09  // 地址检测           
-C51 COMPILER V9.00   QUEEN                                                                 11/19/2014 22:33:15 PAGE 2   
+C51 COMPILER V9.00   QUEEN                                                                 12/01/2014 20:23:18 PAGE 2   
 
   54          #define RX_ADDR_P0      0x0A  // 频道0接收数据地址
   55          #define RX_ADDR_P1      0x0B  // 频道1接收数据地址
@@ -126,7 +126,7 @@ line level    source
  111          void LcdWriteData(uchar dat)    ;
  112          /*LCD1602初始化子程序*/         
  113          void LcdInit();                                           
-C51 COMPILER V9.00   QUEEN                                                                 11/19/2014 22:33:15 PAGE 3   
+C51 COMPILER V9.00   QUEEN                                                                 12/01/2014 20:23:18 PAGE 3   
 
  114          #endif
  115          //********************************************************************************************************
@@ -190,7 +190,7 @@ line level    source
  172          /*功能：NRF24L01的SPI写时序
  173          /****************************************************************************************************/
  174          uint SPI_RW(uint uchar)
-C51 COMPILER V9.00   QUEEN                                                                 11/19/2014 22:33:15 PAGE 4   
+C51 COMPILER V9.00   QUEEN                                                                 12/01/2014 20:23:18 PAGE 4   
 
  175          {
  176   1              uint bit_ctr;
@@ -254,7 +254,7 @@ line level    source
  234          /*********************************************************************************************************
  235          /*函数：uint SPI_Write_Buf(uchar reg, uchar *pBuf, uchar uchars)
  236          /*功能: 用于写数据：为寄存器地址，pBuf：为待写入数据地址，uchars：写入数据的个数
-C51 COMPILER V9.00   QUEEN                                                                 11/19/2014 22:33:15 PAGE 5   
+C51 COMPILER V9.00   QUEEN                                                                 12/01/2014 20:23:18 PAGE 5   
 
  237          /*********************************************************************************************************
              -/
@@ -318,7 +318,7 @@ line level    source
  292          //********************************************************************************************************
              -*****************************************************
  293          /*******************************************************************************
-C51 COMPILER V9.00   QUEEN                                                                 11/19/2014 22:33:15 PAGE 6   
+C51 COMPILER V9.00   QUEEN                                                                 12/01/2014 20:23:18 PAGE 6   
 
  294          * 函 数 名         : Lcd1602_Delay1ms
  295          * 函数功能                 : 延时函数，延时1ms
@@ -382,7 +382,7 @@ line level    source
  353   1              Lcd1602_Delay1ms(5);
  354   1              LCD1602_E = 0;
  355   1      }
-C51 COMPILER V9.00   QUEEN                                                                 11/19/2014 22:33:15 PAGE 7   
+C51 COMPILER V9.00   QUEEN                                                                 12/01/2014 20:23:18 PAGE 7   
 
  356          #endif
  357          /*******************************************************************************
@@ -446,7 +446,7 @@ line level    source
  415          void LcdInit()                                            //LCD初始化子程序
  416          {
  417   1              LcdWriteCom(0x32);       //将8位总线转为4位总线
-C51 COMPILER V9.00   QUEEN                                                                 11/19/2014 22:33:15 PAGE 8   
+C51 COMPILER V9.00   QUEEN                                                                 12/01/2014 20:23:18 PAGE 8   
 
  418   1              LcdWriteCom(0x28);       //在四位线下的初始化
  419   1              LcdWriteCom(0x0c);  //开显示不显示光标
@@ -458,14 +458,14 @@ line level    source
  425          //************************************主函数************************************************************
  426          void main(void)
  427          {
- 428   1              int Asking,Quizing,QzFn,i;
+ 428   1              int Asking,Quizing,QzFn,i,A,B,C,D;
  429   1              unsigned char tf =0;
  430   1              char Ans[NUM];
  431   1              unsigned char AskSt[9]="Ask Start";
  432   1              unsigned char AskStu[17]="Student No.XX Ask";
  433   1              unsigned char AskFnsh[10]="Ask Finish";
  434   1              unsigned char QzSt[10]="Quiz Start";
- 435   1              unsigned char QzFnsh[11]="Quiz Finish";
+ 435   1              unsigned char QzFnsh[34]="Quiz FinishA:  % B:  % C:  % D:  %";
  436   1                                                                 
  437   1              Asking = Quizing = QzFn = 0;
  438   1      
@@ -494,102 +494,115 @@ line level    source
  461   3                              Quizing = 1;
  462   3                              for(i = 0;i<NUM;i++)
  463   3                                      Ans[i] = 0;
- 464   3                              //P0 = seg[2];
- 465   3                              LcdWriteCom(0x01);  //清屏
- 466   3                              LcdWriteCom(0x80);  //设置数据指针起点
- 467   3                              for(i=0;i<5;i++)
- 468   3                                      LcdWriteData(QzSt[i]);     
- 469   3                              LcdWriteCom(0xC0); //设置坐标在第二行  
- 470   3                              for(i=5;i<10;i++)
- 471   3                                      LcdWriteData(QzSt[i]);
- 472   3                              TxBuf[1] = 0x03;
- 473   3                              tf = 1 ;
- 474   3                  }
- 475   2      //              if(Quizing){
- 476   2      //                  TxBuf[1] = 0x03;
- 477   2      //                      tf = 1 ; 
- 478   2      //              }
- 479   2      //              if(QzFn){
-C51 COMPILER V9.00   QUEEN                                                                 11/19/2014 22:33:15 PAGE 9   
+ 464   3                              A = B = C = D = 0;
+ 465   3                              //P0 = seg[2];
+ 466   3                              LcdWriteCom(0x01);  //清屏
+ 467   3                              LcdWriteCom(0x80);  //设置数据指针起点
+ 468   3                              for(i=0;i<5;i++)
+ 469   3                                      LcdWriteData(QzSt[i]);     
+ 470   3                              LcdWriteCom(0xC0); //设置坐标在第二行  
+ 471   3                              for(i=5;i<10;i++)
+ 472   3                                      LcdWriteData(QzSt[i]);
+ 473   3                              TxBuf[1] = 0x03;
+ 474   3                              tf = 1 ;
+ 475   3                  }
+ 476   2      //              if(Quizing){
+ 477   2      //                  TxBuf[1] = 0x03;
+ 478   2      //                      tf = 1 ; 
+ 479   2      //              }
+C51 COMPILER V9.00   QUEEN                                                                 12/01/2014 20:23:18 PAGE 9   
 
- 480   2      //                  TxBuf[1] = 0x04;
- 481   2      //                      tf = 1 ; 
- 482   2      //              }
- 483   2                  if (tf==1){ 
- 484   3                              nRF24L01_TxPacket(TxBuf);       
- 485   3                              TxBuf[1] = 0x00;
- 486   3                              tf = 0;
- 487   3                              Delay(1000);
- 488   3                  }
- 489   2                      SetRX_Mode();
- 490   2                      nRF24L01_RxPacket(RxBuf);
- 491   2                      if(RxBuf[1]){                                   
- 492   3                              if(RxBuf[1]>=0x10 && RxBuf[1]<=0x3f){
- 493   4                                      Asking = 1;                     
- 494   4                                      //P0 = seg[RxBuf[1]-0x10+1];
- 495   4                                      AskStu[11]=(RxBuf[1]-0x10+1)/10+'0';
- 496   4                                      AskStu[12]=(RxBuf[1]-0x10+1)%10+'0'; 
- 497   4                                      LcdWriteCom(0x01);  //清屏
- 498   4                                      LcdWriteCom(0x80);  //设置数据指针起点
- 499   4                                      for(i=14;i<17;i++)
- 500   4                                              LcdWriteData(AskStu[i]);           
- 501   4                                      LcdWriteCom(0xC0); //设置坐标在第二行  
- 502   4                                      for(i=0;i<14;i++)
- 503   4                                              LcdWriteData(AskStu[i]);
- 504   4                              }       
- 505   3                              if(Quizing){
- 506   4                                      QzFn = 1;
- 507   4                                      if(RxBuf[1]>=0x40 && RxBuf[1]<=0x6f){
- 508   5                                      //if(RxBuf[1]==0x06){
- 509   5                                              Ans[RxBuf[1]-0x40] = 'a';
- 510   5                                              //Ans[0] = 'a';                 
- 511   5                                      }
- 512   4                                      if(RxBuf[1]>=0x70 && RxBuf[1]<=0x9f){
- 513   5                                              Ans[RxBuf[1]-0x70] = 'b';
- 514   5                                      }
- 515   4                                      if(RxBuf[1]>=0xa0 && RxBuf[1]<=0xcf){
- 516   5                                              Ans[RxBuf[1]-0xa1] = 'c';
+ 480   2      //              if(QzFn){
+ 481   2      //                  TxBuf[1] = 0x04;
+ 482   2      //                      tf = 1 ; 
+ 483   2      //              }
+ 484   2                  if (tf==1){ 
+ 485   3                              nRF24L01_TxPacket(TxBuf);       
+ 486   3                              TxBuf[1] = 0x00;
+ 487   3                              tf = 0;
+ 488   3                              Delay(1000);
+ 489   3                  }
+ 490   2                      SetRX_Mode();
+ 491   2                      nRF24L01_RxPacket(RxBuf);
+ 492   2                      if(RxBuf[1]){                                   
+ 493   3                              if(RxBuf[1]>=0x10 && RxBuf[1]<=0x3f){
+ 494   4                                      Asking = 1;                     
+ 495   4                                      //P0 = seg[RxBuf[1]-0x10+1];
+ 496   4                                      AskStu[11]=(RxBuf[1]-0x10+1)/10+'0';
+ 497   4                                      AskStu[12]=(RxBuf[1]-0x10+1)%10+'0'; 
+ 498   4                                      LcdWriteCom(0x01);  //清屏
+ 499   4                                      LcdWriteCom(0x80);  //设置数据指针起点
+ 500   4                                      for(i=14;i<17;i++)
+ 501   4                                              LcdWriteData(AskStu[i]);           
+ 502   4                                      LcdWriteCom(0xC0); //设置坐标在第二行  
+ 503   4                                      for(i=0;i<14;i++)
+ 504   4                                              LcdWriteData(AskStu[i]);
+ 505   4                              }       
+ 506   3                              if(Quizing){
+ 507   4                                      QzFn = 1;
+ 508   4                                      if(RxBuf[1]>=0x40 && RxBuf[1]<=0x6f){
+ 509   5                                      //if(RxBuf[1]==0x06){
+ 510   5                                              Ans[RxBuf[1]-0x40] = 'a';
+ 511   5                                              A++;
+ 512   5                                              //Ans[0] = 'a';                 
+ 513   5                                      }
+ 514   4                                      if(RxBuf[1]>=0x70 && RxBuf[1]<=0x9f){
+ 515   5                                              Ans[RxBuf[1]-0x70] = 'b';
+ 516   5                                              B++;
  517   5                                      }
- 518   4                                      if(RxBuf[1]>=0xd0 && RxBuf[1]<=0xff){
- 519   5                                              Ans[RxBuf[1]-0xd1] = 'd';
- 520   5                                      } 
- 521   4                                      for(i = 0;i<NUM;i++){
- 522   5                                              if(Ans[i] == 0)
- 523   5                                                      QzFn = 0;       
- 524   5                                      }
- 525   4                                      if(QzFn){
- 526   5      //                                      LcdWriteCom(0x01);  //清屏
- 527   5      //                                      LcdWriteCom(0x80);  //设置数据指针起点
- 528   5      //                                      LcdWriteData('1');
- 529   5      //                                      while(1);
- 530   5                                              Quizing = 0; 
- 531   5                                              //P0 = 0xBF;   
- 532   5                                              LcdWriteCom(0x01);  //清屏
- 533   5                                              LcdWriteCom(0x80);  //设置数据指针起点
- 534   5                                              for(i=0;i<5;i++)
- 535   5                                                      LcdWriteData(QzFnsh[i]);           
- 536   5                                              LcdWriteCom(0xC0); //设置坐标在第二行  
- 537   5                                              for(i=5;i<11;i++)
- 538   5                                                      LcdWriteData(QzFnsh[i]);
- 539   5                                      }       
- 540   4                              }
- 541   3                              Delay(1000);
-C51 COMPILER V9.00   QUEEN                                                                 11/19/2014 22:33:15 PAGE 10  
+ 518   4                                      if(RxBuf[1]>=0xa0 && RxBuf[1]<=0xcf){
+ 519   5                                              Ans[RxBuf[1]-0xa1] = 'c';
+ 520   5                                              C++;
+ 521   5                                      }
+ 522   4                                      if(RxBuf[1]>=0xd0 && RxBuf[1]<=0xff){
+ 523   5                                              Ans[RxBuf[1]-0xd1] = 'd';
+ 524   5                                              D++;
+ 525   5                                      } 
+ 526   4                                      for(i = 0;i<NUM;i++){
+ 527   5                                              if(Ans[i] == 0)
+ 528   5                                                      QzFn = 0;       
+ 529   5                                      }
+ 530   4                                      if(QzFn){
+ 531   5      //                                      LcdWriteCom(0x01);  //清屏
+ 532   5      //                                      LcdWriteCom(0x80);  //设置数据指针起点
+ 533   5      //                                      LcdWriteData('1');
+ 534   5      //                                      while(1);
+ 535   5                                              Quizing = 0; 
+ 536   5                                              //P0 = 0xBF;   
+ 537   5                                              LcdWriteCom(0x01);  //清屏
+ 538   5                                              LcdWriteCom(0x80);  //设置数据指针起点
+ 539   5                                              for(i=0;i<11;i++)
+ 540   5                                                      LcdWriteData(QzFnsh[i]);           
+ 541   5                                              LcdWriteCom(0xC0); //设置坐标在第二行 
+C51 COMPILER V9.00   QUEEN                                                                 12/01/2014 20:23:18 PAGE 10  
 
- 542   3                      }
- 543   2      //              if(QzFn && !RxBuf[1]){
- 544   2      //                      QzFn = 0;
- 545   2      //              }
- 546   2                      RxBuf[1] = 0x00;
- 547   2              }
- 548   1      }
+ 542   5                                              QzFnsh[13] = (A*100/NUM)/10;
+ 543   5                                              QzFnsh[14] = (A*100/NUM)%10;
+ 544   5                                              QzFnsh[19] = (B*100/NUM)/10;
+ 545   5                                              QzFnsh[20] = (B*100/NUM)%10;
+ 546   5                                              QzFnsh[25] = (C*100/NUM)/10;
+ 547   5                                              QzFnsh[26] = (C*100/NUM)%10;
+ 548   5                                              QzFnsh[31] = (D*100/NUM)/10;
+ 549   5                                              QzFnsh[32] = (D*100/NUM)%10;
+ 550   5                                              for(i=11;i<34;i++)
+ 551   5                                                      LcdWriteData(QzFnsh[i]);
+ 552   5                                      }       
+ 553   4                              }
+ 554   3                              Delay(1000);
+ 555   3                      }
+ 556   2      //              if(QzFn && !RxBuf[1]){
+ 557   2      //                      QzFn = 0;
+ 558   2      //              }
+ 559   2                      RxBuf[1] = 0x00;
+ 560   2              }
+ 561   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1436    ----
-   CONSTANT SIZE    =     57    ----
+   CODE SIZE        =   1669    ----
+   CONSTANT SIZE    =     80    ----
    XDATA SIZE       =   ----    ----
-   PDATA SIZE       =     60      83
+   PDATA SIZE       =     60     114
    DATA SIZE        =      1    ----
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----

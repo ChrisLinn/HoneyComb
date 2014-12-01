@@ -425,14 +425,14 @@ void LcdInit()						  //LCD初始化子程序
 //************************************主函数************************************************************
 void main(void)
 {
-	int Asking,Quizing,QzFn,i;
+	int Asking,Quizing,QzFn,i,A,B,C,D;
 	unsigned char tf =0;
 	char Ans[NUM];
 	unsigned char AskSt[9]="Ask Start";
 	unsigned char AskStu[17]="Student No.XX Ask";
 	unsigned char AskFnsh[10]="Ask Finish";
 	unsigned char QzSt[10]="Quiz Start";
-	unsigned char QzFnsh[11]="Quiz Finish";
+	unsigned char QzFnsh[34]="Quiz FinishA:  % B:  % C:  % D:  %";
 							   
 	Asking = Quizing = QzFn = 0;
 
@@ -461,6 +461,7 @@ void main(void)
 			Quizing = 1;
 			for(i = 0;i<NUM;i++)
 				Ans[i] = 0;
+			A = B = C = D = 0;
 			//P0 = seg[2];
 			LcdWriteCom(0x01);  //清屏
 			LcdWriteCom(0x80);  //设置数据指针起点
@@ -507,16 +508,20 @@ void main(void)
 				if(RxBuf[1]>=0x40 && RxBuf[1]<=0x6f){
 				//if(RxBuf[1]==0x06){
 					Ans[RxBuf[1]-0x40] = 'a';
+					A++;
 					//Ans[0] = 'a';   		
 				}
 				if(RxBuf[1]>=0x70 && RxBuf[1]<=0x9f){
 					Ans[RxBuf[1]-0x70] = 'b';
+					B++;
 				}
 				if(RxBuf[1]>=0xa0 && RxBuf[1]<=0xcf){
 					Ans[RxBuf[1]-0xa1] = 'c';
+					C++;
 				}
 				if(RxBuf[1]>=0xd0 && RxBuf[1]<=0xff){
 					Ans[RxBuf[1]-0xd1] = 'd';
+					D++;
 				} 
 				for(i = 0;i<NUM;i++){
 					if(Ans[i] == 0)
@@ -531,10 +536,18 @@ void main(void)
 					//P0 = 0xBF;   
 					LcdWriteCom(0x01);  //清屏
 					LcdWriteCom(0x80);  //设置数据指针起点
-					for(i=0;i<5;i++)
+					for(i=0;i<11;i++)
 						LcdWriteData(QzFnsh[i]);	   
-					LcdWriteCom(0xC0); //设置坐标在第二行  
-					for(i=5;i<11;i++)
+					LcdWriteCom(0xC0); //设置坐标在第二行 
+					QzFnsh[13] = (A*100/NUM)/10;
+					QzFnsh[14] = (A*100/NUM)%10;
+					QzFnsh[19] = (B*100/NUM)/10;
+					QzFnsh[20] = (B*100/NUM)%10;
+					QzFnsh[25] = (C*100/NUM)/10;
+					QzFnsh[26] = (C*100/NUM)%10;
+					QzFnsh[31] = (D*100/NUM)/10;
+					QzFnsh[32] = (D*100/NUM)%10;
+					for(i=11;i<34;i++)
 						LcdWriteData(QzFnsh[i]);
 				}	
 			}
